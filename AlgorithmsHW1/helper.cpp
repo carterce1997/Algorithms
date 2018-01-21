@@ -14,3 +14,13 @@ void shuffle( int buffer[], int size )
 		swap( buffer[index], buffer[i] );
 	}
 }
+
+// show array
+void show( int buffer[], int size )
+{
+	cerr << "[";
+	for (int i=0; i<size; i++) {
+		cerr << buffer[i] << " ";
+	}
+	cerr << "]" << endl;
+}
