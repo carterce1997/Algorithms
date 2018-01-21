@@ -2,7 +2,7 @@ CC = g++
 FLAGS = -g
 SRC = main.cpp search.cpp helper.cpp
 OBJ = main.o search.o helper.o
-EXEC = test_me
+EXEC = run
 
 all: $(EXEC)
 
