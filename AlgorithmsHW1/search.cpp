@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <iostream>
+
+using namespace std;
+
 void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost)
 {
     // search for min, place at front of array
@@ -10,7 +15,7 @@ void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost
         }
         ++cost;
     }
-    swap(buffer[0], buffer[min_idx])
+    swap(buffer[0], buffer[min_idx]);
 
     // search for max, place at front of array
     max = buffer[1];
@@ -22,7 +27,7 @@ void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost
         }
         ++cost;
     }
-    swap(buffer[1], buffer[max_idx])
+    swap(buffer[1], buffer[max_idx]);
 }
 
 void recursive_search( int buffer[], int curr_size, int & min, int & max, int & cost)

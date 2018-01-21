@@ -6,11 +6,8 @@ EXEC = test_me
 
 all: $(EXEC)
 
-$(EXEC): $(OBJ)
-    $(CC) $(FLAGS) -o $(EXEC) $(OBJ)
+$(EXEC): $(OBJ) $(CC) $(FLAGS) -o $(EXEC) $(OBJ)
 
-.cpp.o: 
-    $(CC) $(FLAGS) -c $< -o $@
+.cpp.o: $(CC) $(FLAGS) -c $< -o $@
 
-clean:
-    rm -f $(EXEC) $(OBJ)
+clean: rm -f $(EXEC) $(OBJ)
