@@ -1,3 +1,8 @@
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
 void swap(int & a, int & b) {
     int temp = a;
     b = temp;

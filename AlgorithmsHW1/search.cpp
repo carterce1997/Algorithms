@@ -24,7 +24,7 @@ void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost
         if (buffer[i] > max) {
             max = buffer[i];
             max_idx = i;
-        }ssh
+        }
         ++cost;
     }
     swap(buffer[1], buffer[max_idx]);
