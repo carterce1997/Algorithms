@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-	using namespace std;
+using namespace std;
 
 void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost)
 {
@@ -30,26 +30,26 @@ void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost
     swap(buffer[1], buffer[max_idx]);
 }
 
-
 pair<int,int> recursive_helper( int buffer[], int left, int right, int & cost){
 	
-	if( (left - right) == 0 )
-		return pair<int,int>(buffer[left],buffer[right]);
-	else if( (left - right) == 1 ){
+	if( right == left ){
+		++cost;
+		return pair<int,int>(left,right);
+	}	
+	else if( (right - left) == 1 ){
 		++cost;
 		return (buffer[left] < buffer[right]) ? pair<int,int>(buffer[left],buffer[right]) : pair<int,int>(buffer[right],buffer[left]);
 	}	
 	else{
-		int middle = (left-right) / 2;
-		pair<int,int> search_left = recursive_helper(buffer, left, middle, cost );
-		pair<int,int> search_right = recursive_helper(buffer, middle+1, right, cost );
+		int middle = (left+right) / 2;
+		pair<int,int> search_left = recursive_helper(buffer, left, middle-1, cost );
+		pair<int,int> search_right = recursive_helper(buffer, middle, right, cost );
 		
 		// compare min's and max's
 		++cost;
-		if(buffer[search_left.first] < buffer[search_right.first])
-			return pair<int,int>(buffer[search_left.first],buffer[search_right.first]);
-		else
-			return pair<int,int>(buffer[search_right.first], buffer[search_left.first]);
+		int min_index = (search_left.first < search_right.first) ? search_left.first : search_right.first;
+		int max_index = (search_left.second > search_right.second) ? search_left.second : search_right.second;
+		return pair<int,int>(min_index, max_index);
 	}
 }
 
@@ -60,6 +60,7 @@ void recursive_search( int buffer[], int curr_size, int & min, int & max, int & 
 	min = min_max.first;
 	max = min_max.second;
 }
+
 
 void iterative_search( int buffer[], int curr_size, int & min, int & max, int & cost)
 {
