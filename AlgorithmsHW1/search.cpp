@@ -29,22 +29,24 @@ void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost
 pair<int,int> recursive_helper( int buffer[], int left, int right, int & cost){
 	
 	if( right == left ){
-		++cost;
+		cout << "Left: " << left << "     middle: "<<(right + left)/2<<"     right: "<<right<<endl;
 		return pair<int,int>(left,right);
 	}	
 	else if( (right - left) == 1 ){
 		++cost;
-		return (buffer[left] < buffer[right]) ? pair<int,int>(buffer[left],buffer[right]) : pair<int,int>(buffer[right],buffer[left]);
+		cout << "Left: " << left << "     middle: "<<(right + left)/2<<"     right: "<<right<<endl;
+		return (buffer[left] < buffer[right]) ? pair<int,int>(left,right) : pair<int,int>(right,left);
 	}	
 	else{
 		int middle = (left+right) / 2;
-		pair<int,int> search_left = recursive_helper(buffer, left, middle-1, cost );
-		pair<int,int> search_right = recursive_helper(buffer, middle, right, cost );
+		cout << "Left: " << left << "     middle: "<<(right + left)/2<<"     right: "<<right<<endl;
+		pair<int,int> search_left = recursive_helper(buffer, left, middle, cost );
+		pair<int,int> search_right = recursive_helper(buffer, middle+1, right, cost );
 		
 		// compare min's and max's
-		++cost;
-		int min_index = (search_left.first < search_right.first) ? search_left.first : search_right.first;
-		int max_index = (search_left.second > search_right.second) ? search_left.second : search_right.second;
+		cost += 2;
+		int min_index = (buffer[search_left.first] < buffer[search_right.first]) ? search_left.first : search_right.first;
+		int max_index = (buffer[search_left.second] > buffer[search_right.second]) ? search_left.second : search_right.second;
 		return pair<int,int>(min_index, max_index);
 	}
 }
