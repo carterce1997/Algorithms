@@ -3,27 +3,27 @@
 
 using namespace std;
 
-void swap(int & a, int & b) {
-    int temp = a;
-    b = temp;
-    a = b;
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 // shuffle array
 void shuffle( int buffer[], int size )
 {
 	srand( time(0) );
-	int index;
+	int j;
 	for (int i=size-1; i>0; i--) {
-		index = rand() % size;
-		swap( buffer[index], buffer[i] );
+		j = rand() % (i+1);
+		swap( buffer[j], buffer[i] );
 	}
 }
 
 // show array
 void show( int buffer[], int size )
 {
-	cerr << "[";
+	cerr << "[ ";
 	for (int i=0; i<size; i++) {
 		cerr << buffer[i] << " ";
 	}

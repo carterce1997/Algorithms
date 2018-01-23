@@ -19,13 +19,13 @@ int main( int argc, char *argv[] )
 {
 	// check inputs
 	if ( argc < 3 ) {
-		cerr << "Usage: ./test_me <size> <filename>" << endl;
+		cerr << "Usage: ./run <size> <filename>" << endl;
 		exit(1);
 	}
 
 	// read size
 	int size;
-	size = atoi( argv[1] );
+	size = atoi( argv[1] ) + 1;
 	cerr << "Size = " << size << endl;
 
 	// open outputfile
@@ -34,7 +34,8 @@ int main( int argc, char *argv[] )
 	outfile.open( argv[2] );
 
 	for (int curr_size = 2; curr_size < size; curr_size++) {
-
+        
+        cout << "Current Size = " << curr_size << endl;
 		// create an array of integers
 		int buffer[curr_size];
 		for (int i = 0; i < curr_size; i++) {
@@ -43,12 +44,18 @@ int main( int argc, char *argv[] )
 
 		// shuffle array
 		shuffle( buffer, curr_size );
-
-		// search for minmax while tracking cost
+        show(buffer, curr_size);
+		
+        // search for minmax while tracking cost
 		int min, max, cost;
 		cost = 0;
 
 		naive_search( buffer, curr_size, min, max, cost );
+        cout << "Min = " << min << endl;
+        cout << "Max = " << max << endl;
+        cout << "Cost = " << cost << endl;
+        cout << endl;
+
 		assert( min == 0 && max == curr_size - 1 );
 		outfile << curr_size << " " << cost << endl;
 	}

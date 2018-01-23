@@ -15,19 +15,15 @@ void naive_search( int buffer[], int curr_size, int & min, int & max, int & cost
         }
         ++cost;
     }
-    swap(buffer[0], buffer[min_idx]);
-
+    swap(buffer[min_idx], buffer[0]);
     // search for max, place at front of array
     max = buffer[1];
-    int max_idx = 1;
     for (int i=2; i < curr_size; ++i) {
         if (buffer[i] > max) {
             max = buffer[i];
-            max_idx = i;
         } 
         ++cost;
     }
-    swap(buffer[1], buffer[max_idx]);
 }
 
 pair<int,int> recursive_helper( int buffer[], int left, int right, int & cost){
