@@ -56,8 +56,6 @@ int main( int argc, char *argv[] )
       cout << "Cost = " << cost << endl;
       cout << endl;
 
-        recursive_search( buffer, curr_size, min, max, cost )
-
 		assert( min == 0 && max == curr_size - 1 );
 		outfile << curr_size << " " << cost << endl;
 	}
