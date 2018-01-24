@@ -38,7 +38,7 @@ pair<int,int> recursive_helper( int buffer[], int left, int right, int & cost){
 	}	
 	else{
 		int middle = (left+right) / 2;
-		cout << "Left: " << left << "     middle: "<<(right + left)/2<<"     right: "<<right<<endl;
+//		cout << "Left: " << left << "     middle: "<<(right + left)/2<<"     right: "<<right<<endl;
 		pair<int,int> search_left = recursive_helper(buffer, left, middle, cost );
 		pair<int,int> search_right = recursive_helper(buffer, middle+1, right, cost );
 		

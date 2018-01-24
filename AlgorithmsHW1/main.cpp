@@ -33,6 +33,8 @@ int main( int argc, char *argv[] )
 	cerr << "Output file = " << argv[2] << endl;
 	outfile.open( argv[2] );
 
+    outfile << "Size,NaiveCost,RecursiveCost,IterativeCost" << endl;
+
 	for (int curr_size = 2; curr_size < size; curr_size++) {
         
       cout << "Current Size = " << curr_size << endl;
@@ -47,19 +49,22 @@ int main( int argc, char *argv[] )
       show(buffer, curr_size);
 		
         // search for minmax while tracking cost
-		int min, max, cost;
-		cost = 0;
+		int min, max;
+		int naive_cost = 0;
 
-		recursive_search( buffer, curr_size, min, max, cost );
-      cout << "Min = " << min << endl;
-      cout << "Max = " << max << endl;
-      cout << "Cost = " << cost << endl;
-      cout << endl;
+		naive_search( buffer, curr_size, min, max, naive_cost );
+        cout << "Naive Cost = " << naive_cost << endl;
 
-        recursive_search( buffer, curr_size, min, max, cost )
+        int recursive_cost = 0;
+        recursive_search(buffer, curr_size, min, max, recursive_cost);
+        cout << "Recursive Cost = " << recursive_cost << endl;
+        cout << endl;
+
+        int iterative_cost = 0;
+        // iterative search
 
 		assert( min == 0 && max == curr_size - 1 );
-		outfile << curr_size << " " << cost << endl;
+		outfile << curr_size << "," << naive_cost << "," << recursive_cost << "," << iterative_cost << endl;
 	}
 
 	// closing output file
