@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-df = pd.read_csv("out.csv")
+f = input("Data Filename: ")
+df = pd.read_csv(f)
 
 x = df["Size"]
 

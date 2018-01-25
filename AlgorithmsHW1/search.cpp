@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -63,5 +64,52 @@ void recursive_search( int buffer[], int curr_size, int & min, int & max, int & 
 
 void iterative_search( int buffer[], int curr_size, int & min, int & max, int & cost)
 {
-
+    //int num_layers = ceil(log(curr_size)/log(2));
+    //int skip_size;
+    //for (int k = 1; k < num_layers; ++k) {
+    //    skip_size = (int)pow(2, k);
+    //    for (int i = 0; i < curr_size; i=i+skip_size) {
+    //        if (buffer[i] > buffer[i+skip_size]) {
+    //            swap(buffer[i], buffer[i+1]);
+    //        }
+    //        ++cost;
+    //    }
+    //}
+    min = buffer[0];
+    max = buffer[1];
+    if (min > max) {
+        swap(max, min);
+    }
+    cost++;
+    
+    bool check_last_element = (curr_size % 2 != 0);
+    for (int i = 2; i < curr_size-1; i = i+2) {
+        if(buffer[i] > buffer[i+1]) {
+            if (buffer[i] > max) {
+                max = buffer[i];
+            }
+            if (buffer[i+1] < min) {
+                min = buffer[i+1];
+            }
+            cost += 2;
+        } 
+        else {
+            if (buffer[i+1] > max) {
+                max = buffer[i+1];
+            }
+            if (buffer[i] < min) {
+                min = buffer[i];
+            }
+            cost += 2;
+        }
+        ++cost;
+    }
+    if (check_last_element) {
+        if(buffer[curr_size-1] > max) {
+            max = buffer[curr_size-1];
+        } else if (buffer[curr_size-1] < min) {
+            min = buffer[curr_size-1];
+        }
+        cost += 2;
+    }
 }
