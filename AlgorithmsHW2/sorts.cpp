@@ -27,6 +27,19 @@ void isort(int array[], int size, int& cost) {
     }
 }
 
-void ssort(int array[], int size, int& cost);
+void ssort(int array[], int size, int& cost) {
+    int imin;
+    for (int i = 0; i < size; ++i) {
+        imin = i;  
+        for (int j = i+1; j < size; ++j) {
+            if (array[j] < array[imin] ) {
+                imin = j;
+            }
+            ++cost;
+        }
+        swap(array[i], array[imin]);
+    }   
+}
+
 void msort(int array[], int size, int& cost);
 //void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)); // quicksort

@@ -62,6 +62,13 @@ int main( int argc, char *argv[] )
         isort(buffer, curr_size, icost);
         show(buffer, curr_size);
         cerr << "Insertion Sort Cost = " << icost << endl;
+
+        int scost = 0;
+        shuffle(buffer, curr_size);
+        ssort(buffer, curr_size, scost);
+        show(buffer, curr_size);
+        cerr << "Selection Sort Cost = " << scost << endl;
+
 	}
 
 	// closing output file
