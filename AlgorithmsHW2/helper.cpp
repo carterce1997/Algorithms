@@ -30,3 +30,9 @@ void show( int buffer[], int size )
 	}
 	cerr << "]" << endl;
 }
+
+void copy(int array[], int new_array[], int size) {
+    for (int i=0; i < size; ++i) {
+        new_array[i] = array[i];
+    }
+}

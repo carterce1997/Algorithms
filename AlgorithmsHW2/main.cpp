@@ -3,13 +3,13 @@
 #include <iostream>
 #include <fstream>
 
-
 using namespace std;
 
 // prototypes
 void show( int[], int );
 void shuffle( int[], int );
 void swap( int&, int& );
+void copy( int[], int[], int);
 
 void bsort(int[], int, int&);
 void isort(int[], int, int&); // insertion sort
@@ -50,25 +50,41 @@ int main( int argc, char *argv[] )
 		// shuffle array
         shuffle(buffer, curr_size);
         show(buffer, curr_size);
-        
+ 
         // do bubble sort
         int bcost = 0;
-        bsort(buffer, curr_size, bcost);
-        show(buffer, curr_size);
+        int bbuffer[curr_size];
+        copy(buffer, bbuffer, curr_size);
+        bsort(bbuffer, curr_size, bcost);
+        cerr << "Bubble Sort Sorted Array: ";
+        show(bbuffer, curr_size);
         cerr << "Bubble Sort Cost = " << bcost << endl;
 		
         int icost = 0;
-        shuffle(buffer, curr_size);
-        isort(buffer, curr_size, icost);
-        show(buffer, curr_size);
+        int ibuffer[curr_size];
+        copy(buffer, ibuffer, curr_size);
+        isort(ibuffer, curr_size, icost);
+        cerr << "Insertion Sort Sorted Array: ";
+        show(ibuffer, curr_size);
         cerr << "Insertion Sort Cost = " << icost << endl;
 
         int scost = 0;
-        shuffle(buffer, curr_size);
-        ssort(buffer, curr_size, scost);
-        show(buffer, curr_size);
+        int sbuffer[curr_size];
+        copy(buffer, sbuffer, curr_size);
+        ssort(sbuffer, curr_size, scost);
+        cerr << "Selection Sort Sorted Array: ";
+        show(sbuffer, curr_size);
         cerr << "Selection Sort Cost = " << scost << endl;
 
+        int mcost = 0;
+        int mbuffer[curr_size];
+        copy(buffer, mbuffer, curr_size);    
+        msort(mbuffer, curr_size, mcost);
+        cerr << "Merge Sort Sorted Array: ";
+        show(mbuffer, curr_size);
+        cerr << "Merge Sort Cost = " << mcost << endl;
+
+        cerr << endl;
 	}
 
 	// closing output file
