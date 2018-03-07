@@ -112,9 +112,7 @@ int kthSmallest(int array[], const int& left, const int& right, const int& k){
 	for(; count < size/5; ++count){
 		medians[count] = medianSize5(array+ count*5);
 	}
-	if(size%5 !=0){
-	
-	}
+	if(size%5 !=0)
 }
 
 int findMedian(int array[], int size, int& cost){

@@ -91,7 +91,7 @@ int main( int argc, char *argv[] )
         copy(buffer, qbuffer, curr_size);    
         qsort_fixed(qbuffer, curr_size, qcost);
         cerr << "Quick Sort Sorted Array: ";
-        show(qbuffer, curr_size);
+        show(mbuffer, curr_size);
         cerr << "Quick Sort Cost = " << qcost << endl;
 
 
