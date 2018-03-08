@@ -76,83 +76,65 @@ void msort(int array[], int size, int& cost) {
     merge_sort(array, size, cost);
 }
 
-int partition(int array[], const int& left, const int& right, int& cost){
-	int pivot = array[right];
+int partition(int array[], const int& left, const int& right, int& cost, int(*choose_pivot)(int [], int, int) ){
+	int pivot = choose_pivot(array, left, right);
 	int i = left-1;
 	for(int j = left; j < right; ++j){
 		++cost;
-		if(array[j] < pivot){
+		if(array[j] < array[pivot]){
 			++i;
 			swap(array[i], array[j]);
 		}				
 	}
-	swap(array[right], array[i+1]);
+	swap(array[pivot], array[i+1]);
 	return i+1;
 }
 
-void quickSort(int array[], const int& left, const int& right, int& cost){
+void quickSort(int array[], int left, int right, int& cost, int (*choose_pivot)(int [], int, int)){
 	if(left<right){
-		int p = partition(array, left, right, cost);
-		quickSort(array, left, p-1, cost);
-		quickSort(array, p+1, right, cost);
+		int p = partition(array, left, right, cost, choose_pivot);
+		quickSort(array, left, p-1, cost, choose_pivot);
+		quickSort(array, p+1, right, cost, choose_pivot);
 	}
 }
-
-int medianSize5(int array[]){
-	// sort elements in place
-	std::sort(array, array+5);
-	return array[5/2];
-}
-
-int kthSmallest(int array[], const int& left, const int& right, const int& k){
-
-	int size = right-left+1;
-	int medians[(size+4)/5];// +4 because of integer floor
-	int count = 0;
-	for(; count < size/5; ++count){
-		medians[count] = medianSize5(array+ count*5);
-	}
-	if(size%5 !=0){
-	
-	}
-}
-
-void qsort_fixed(int array[], const int& size, int& cost){
-	quickSort(array, 0, size-1, cost);
-}
-
 
 int fixed_pivot(int array[], int left, int right) {
-    return left;
+    return right;
 }
 
-void qsort(int array[], int left, int right, int (*choose_pivot)(int [], int, int), int& cost) {
-    int size = right - left + 1;
-    if (size > 1) {
-    int pivot = choose_pivot(array, left, right);
+void copy(int[], int[], int);
+
+int my_median_pivot(int array[], int left, int right) { // this causes a segfault at n=6
+    int buffer[right - left + 1];
     
-    int i = left-1;
-    for(int j = left; j < right; ++j){
-        ++cost;
-        if(array[j] < pivot){
-            ++i;
-            swap(array[i], array[j]);
+    copy(array, buffer, right - left + 1);
+
+    int k = (right - left + 1) / 2;
+    while (left < right) {
+        int pivot = buffer[left + k];
+        swap(buffer[left + k], buffer[right]);
+        int i;
+        int pos;
+        for (i = pos = left; i < right; ++i) {
+            if (buffer[i] < pivot) {
+                swap(buffer[i], buffer[pos]);
+                ++pos;
+            }
+        }
+        swap(buffer[right], buffer[pos]);
+        if (pos == left + k) break;
+        if (pos < left + k) left = pos + 1;
+        else right = pos - 1;
+    }
+    int median = buffer[left + k];
+    for (int i = left; i < right; ++i) {
+        if (buffer[i] == median) {
+            return i;
         }
     }
-    swap(array[right], array[i+1]);
-
-    qsort(array, left, pivot, choose_pivot, cost);
-    qsort(array, pivot, right, choose_pivot, cost);
-    }
+    return left; // just in case
 }
 
-void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)) {
-    
+void my_qsort(int array[], int size, int (*choose_pivot)(int [], int, int), int & cost) {
+    quickSort(array, 0, size, cost, choose_pivot);
 }
-
-
-
-
-
-
-

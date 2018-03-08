@@ -15,12 +15,10 @@ void bsort(int[], int, int&);
 void isort(int[], int, int&); // insertion sort
 void ssort(int[], int, int&); // selection sort
 void msort(int[], int, int&); // mergesort
-void qsort_fixed(int[], const int&, int&);
-void qsort(int[], int, int, int (*choose_pivot)(int [], int, int), int&); // quicksort
-
-//void my_qsort(int[], int, int (*choose_pivot)(int [], int)); // quicksort
+void my_qsort(int[], int, int (*choose_pivot)(int [], int, int), int&); // quicksort
 
 int fixed_pivot(int[], int, int);
+int my_median_pivot(int[], int, int);
 
 // main driver
 int main( int argc, char *argv[] )
@@ -92,8 +90,7 @@ int main( int argc, char *argv[] )
         int qcost = 0;
         int qbuffer[curr_size];
         copy(buffer, qbuffer, curr_size);    
-        //qsort_fixed(qbuffer, curr_size, qcost);
-        qsort(qbuffer, 0, curr_size, fixed_pivot, qcost);
+        my_qsort(qbuffer, curr_size, fixed_pivot, qcost); // segfault at n=6 due to my_median_pivot
         cerr << "Quick Sort Sorted Array: ";
         show(qbuffer, curr_size);
         cerr << "Quick Sort Cost = " << qcost << endl;
