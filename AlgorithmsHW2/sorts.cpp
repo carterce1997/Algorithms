@@ -117,17 +117,42 @@ int kthSmallest(int array[], const int& left, const int& right, const int& k){
 	}
 }
 
-int findMedian(int array[], int size, int& cost){
-	
-
-}
-
 void qsort_fixed(int array[], const int& size, int& cost){
 	quickSort(array, 0, size-1, cost);
 }
 
 
+int fixed_pivot(int array[], int left, int right) {
+    return left;
+}
+
+void qsort(int array[], int left, int right, int (*choose_pivot)(int [], int, int), int& cost) {
+    int size = right - left + 1;
+    if (size > 1) {
+    int pivot = choose_pivot(array, left, right);
+    
+    int i = left-1;
+    for(int j = left; j < right; ++j){
+        ++cost;
+        if(array[j] < pivot){
+            ++i;
+            swap(array[i], array[j]);
+        }
+    }
+    swap(array[right], array[i+1]);
+
+    qsort(array, left, pivot, choose_pivot, cost);
+    qsort(array, pivot, right, choose_pivot, cost);
+    }
+}
+
+void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)) {
+    
+}
 
 
 
-//void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)); // quicksort
+
+
+
+
