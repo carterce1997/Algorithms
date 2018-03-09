@@ -77,21 +77,21 @@ void msort(int array[], int size, int& cost) {
 }
 
 int partition(int array[], const int& left, const int& right, int& cost, int(*choose_pivot)(int [], int, int) ){
-	int pivot = choose_pivot(array, left, right);
-	int i = left-1;
-	for(int j = left; j < right; ++j){
+	int pivot = choose_pivot(array, left, right); 
+ 
+    int i = left - 1;
+	for(int j = left; j <= right; ++j){
 		++cost;
-		if(array[j] < array[pivot]){
-			++i;
+		if(array[j] <= array[pivot]){
+            ++i;
 			swap(array[i], array[j]);
 		}				
 	}
-	swap(array[pivot], array[i+1]);
-	return i+1;
+	return i;
 }
 
 void quickSort(int array[], int left, int right, int& cost, int (*choose_pivot)(int [], int, int)){
-	if(left<right){
+	if(left < right){
 		int p = partition(array, left, right, cost, choose_pivot);
 		quickSort(array, left, p-1, cost, choose_pivot);
 		quickSort(array, p+1, right, cost, choose_pivot);
@@ -104,37 +104,36 @@ int fixed_pivot(int array[], int left, int right) {
 
 void copy(int[], int[], int);
 
-int my_median_pivot(int array[], int left, int right) { // this causes a segfault at n=6
-    int buffer[right - left + 1];
-    
-    copy(array, buffer, right - left + 1);
-
-    int k = (right - left + 1) / 2;
-    while (left < right) {
-        int pivot = buffer[left + k];
-        swap(buffer[left + k], buffer[right]);
-        int i;
-        int pos;
-        for (i = pos = left; i < right; ++i) {
-            if (buffer[i] < pivot) {
-                swap(buffer[i], buffer[pos]);
-                ++pos;
-            }
-        }
-        swap(buffer[right], buffer[pos]);
-        if (pos == left + k) break;
-        if (pos < left + k) left = pos + 1;
-        else right = pos - 1;
-    }
-    int median = buffer[left + k];
+int partition5(int array[], int left, int right) {
     for (int i = left; i < right; ++i) {
-        if (buffer[i] == median) {
-            return i;
+        int j = i;
+        while (j > 0 && array[j-1] > array[j]) {
+            swap(array[j-1], array[j]);
+            j--;
         }
     }
-    return left; // just in case
+    return array[(right - left + 1)/2];
+}
+
+int select(int array[], int left, int right) {
+    int arrayc[right - left + 1];
+    copy(array, arrayc, right - left + 1);
+
+    if (right - left < 5) {
+        return partition5(arrayc, left, right);
+    }
+    
+    for (int i = left; i < right; i = i + 5) {
+        int subright = i + 4;
+        if (subright > right) subright = right;
+
+        int median5 = partition5(arrayc, i, subright);
+        swap(arrayc[median5], arrayc[left + (i - left)/5]);
+    }
+    
+    return select(arrayc, left, left + (right - left + 1)/5);
 }
 
 void my_qsort(int array[], int size, int (*choose_pivot)(int [], int, int), int & cost) {
-    quickSort(array, 0, size, cost, choose_pivot);
+    quickSort(array, 0, size-1, cost, choose_pivot);
 }
