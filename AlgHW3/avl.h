@@ -5,6 +5,6 @@ class AVL
 {
 private:
 public:
-}
+};
 
 #endif

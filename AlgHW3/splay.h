@@ -5,7 +5,7 @@ class Splay
 {
 private:
 public:
-}
+};
 
 
 #endif
