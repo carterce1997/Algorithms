@@ -15,25 +15,11 @@ private:
     Node* parent; //pointer to parent node
 
 public:
-    Node() {
-        value = 0;
-        left = NULL;
-        right = NULL;
-        parent = NULL;
-    }
-
     Node(int v) {
         value = v;
         left = NULL;
         right = NULL;
         parent = NULL;
-    }
-
-    Node(Node* p, int v) {
-        parent = p;
-        left = NULL;
-        right = NULL;
-        value = v;
     }
 
     Node* get_left() { return left; };
