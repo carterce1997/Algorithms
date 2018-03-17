@@ -1,13 +1,18 @@
 #include <stdlib.h>
 #include <iostream>
 #include <algorithm>
-
+#include <cassert>
 using namespace std;
 
-void bsort(int array[], int size, int& cost) {
-    for (int pass = 0; pass < size-1; ++pass) { // need n-1 passes
-        for (int i = 1; i < size; ++i) { // bubble sort on each pass
-            if (array[i] < array[i-1]) {
+void show(int[],int);
+
+//***********************************************************************************************************
+// BUBBLE SORT
+
+void bsort(int array[], int size, int& cost){
+    for (int pass = 0; pass < size-1; ++pass){ // need n-1 passes
+        for (int i = 1; i < size; ++i){ // bubble sort on each pass
+            if (array[i] < array[i-1]){
                 swap(array[i], array[i-1]);
             }
             ++cost;
@@ -15,11 +20,14 @@ void bsort(int array[], int size, int& cost) {
     }
 }
 
-void isort(int array[], int size, int& cost) {
-    for (int i = 1; i < size; ++i) {
+//***********************************************************************************************************
+// INSERTION SORT
+
+void isort(int array[], int size, int& cost){
+    for (int i = 1; i < size; ++i){
         int j = i-1;
         int tmp = array[i];
-        while(j >=0 & array[j] > tmp) {
+        while(j >=0 & array[j] > tmp){
             array[j+1] = array[j];
             j--; 
             cost++;
@@ -28,12 +36,15 @@ void isort(int array[], int size, int& cost) {
     }
 }
 
-void ssort(int array[], int size, int& cost) {
+//***********************************************************************************************************
+// SELECTION SORT
+
+void ssort(int array[], int size, int& cost){
     int imin;
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < size; ++i){
         imin = i;  
-        for (int j = i+1; j < size; ++j) {
-            if (array[j] < array[imin] ) {
+        for (int j = i+1; j < size; ++j){
+            if (array[j] < array[imin] ){
                 imin = j;
             }
             ++cost;
@@ -42,11 +53,14 @@ void ssort(int array[], int size, int& cost) {
     }   
 }
 
-void merge(int *array, int *left, int left_size, int *right, int right_size, int& cost) {
+//***********************************************************************************************************
+// MERGE SORT
+
+void merge(int *array, int *left, int left_size, int *right, int right_size, int& cost){
     int i, j, k;
     i = j = k = 0;
 
-    while (i < left_size && j < right_size) {
+    while (i < left_size && j < right_size){
         if (left[i] < right[j]) array[k++] = left[i++];
         else array[k++] = right[j++];
         ++cost;
@@ -55,7 +69,7 @@ void merge(int *array, int *left, int left_size, int *right, int right_size, int
     while (j < right_size) array[k++] = right[j++];
 }
 
-void merge_sort(int *array, int size, int& cost) {
+void merge_sort(int *array, int size, int& cost){
     if (size < 2) return;
     int mid = size/2;
 
@@ -72,68 +86,81 @@ void merge_sort(int *array, int size, int& cost) {
 }
 
 
-void msort(int array[], int size, int& cost) {
+void msort(int array[], int size, int& cost){
     merge_sort(array, size, cost);
 }
 
-int partition(int array[], const int& left, const int& right, int& cost, int(*choose_pivot)(int [], int, int) ){
-	int pivot = choose_pivot(array, left, right); 
- 
-    int i = left - 1;
-	for(int j = left; j <= right; ++j){
-		++cost;
-		if(array[j] <= array[pivot]){
-            ++i;
-			swap(array[i], array[j]);
-		}				
+//***********************************************************************************************************
+// QUICK SORT
+
+int fixed_pivot(int array[], int size){
+	assert(size > 0);
+    return array[0];
+}
+
+int select_pivot(int array[], int size){
+   	assert(size > 0);
+
+	if (size <= 5){
+		int constantCost = 0;
+		merge_sort(array, size, constantCost);
+		return array[size/2];
 	}
-	return i;
-}
 
-void quickSort(int array[], int left, int right, int& cost, int (*choose_pivot)(int [], int, int)){
-	if(left < right){
-		int p = partition(array, left, right, cost, choose_pivot);
-		quickSort(array, left, p-1, cost, choose_pivot);
-		quickSort(array, p+1, right, cost, choose_pivot);
+	int sizeMedians = size % 5 == 0 ? (size/5) : (size/5)+1;
+	
+    int medians[sizeMedians];
+    for (int i = 0; i < sizeMedians; ++i){
+        int subLeft = i* 5;
+        int subRight = subLeft+4;
+
+		if ( subRight > (size-1) ) subRight = size-1;
+		
+		int sizeTemp = subRight-subLeft + 1;
+        int tempArray[sizeTemp];
+		
+		for(int j = 0; j < sizeTemp; ++j) tempArray[j] = array[subLeft+j];
+		
+		medians[i] = select_pivot(tempArray, sizeTemp);
 	}
+
+    return select_pivot(medians, sizeMedians);
 }
 
-int fixed_pivot(int array[], int left, int right) {
-    return right;
-}
+void my_qsort(int array[], int size, int (*choose_pivot)(int [], int), int& cost){
+	if(size > 1){
+		int pivot = choose_pivot(array, size);// pivot is value (not index)
+		
+		int leftArr[size];
+		int rightArr[size];
 
-void copy(int[], int[], int);
+		bool duplicatePivot = false;
+		int lSize = 0, rSize = 0;
+		
+		for(int i = 0; i < size; ++i){
+			if(!duplicatePivot && array[i] == pivot){
+				duplicatePivot = true;
+				continue;
+			}
 
-int partition5(int array[], int left, int right) {
-    for (int i = left; i < right; ++i) {
-        int j = i;
-        while (j > 0 && array[j-1] > array[j]) {
-            swap(array[j-1], array[j]);
-            j--;
-        }
-    }
-    return array[(right - left + 1)/2];
-}
-
-int select(int array[], int left, int right) {
-    int arrayc[right - left + 1];
-    copy(array, arrayc, right - left + 1);
-
-    if (right - left < 5) {
-        return partition5(arrayc, left, right);
-    }
-    
-    for (int i = left; i < right; i = i + 5) {
-        int subright = i + 4;
-        if (subright > right) subright = right;
-
-        int median5 = partition5(arrayc, i, subright);
-        swap(arrayc[median5], arrayc[left + (i - left)/5]);
-    }
-    
-    return select(arrayc, left, left + (right - left + 1)/5);
-}
-
-void my_qsort(int array[], int size, int (*choose_pivot)(int [], int, int), int & cost) {
-    quickSort(array, 0, size-1, cost, choose_pivot);
+			if(array[i] < pivot){
+				leftArr[lSize] = array[i];
+				++lSize;
+			}
+			else{
+				rightArr[rSize] = array[i];
+				++rSize;
+			}
+			++cost;
+		}
+		
+		my_qsort(leftArr, lSize, choose_pivot, cost );
+		my_qsort(rightArr, rSize, choose_pivot, cost);
+		
+		int i;
+		for(i = 0; i < lSize; ++i) array[i] = leftArr[i];
+		array[i] = pivot;
+		++lSize;// to compensate for pivot element
+		for(i = 0; i < rSize; ++i) array[i+lSize] = rightArr[i];
+	}
 }

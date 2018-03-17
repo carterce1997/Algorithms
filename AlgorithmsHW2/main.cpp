@@ -15,11 +15,10 @@ void bsort(int[], int, int&);
 void isort(int[], int, int&); // insertion sort
 void ssort(int[], int, int&); // selection sort
 void msort(int[], int, int&); // mergesort
-void my_qsort(int[], int, int (*choose_pivot)(int [], int, int), int&); // quicksort
-void quickSort2(int[], int, int, int&, int(*choose_pivot)(int[], int, int));
+void my_qsort(int[], int, int(*choose_pivot)(int [], int), int&); // quicksort
 
-int fixed_pivot(int[], int, int);
-int select(int[], int, int);
+int fixed_pivot(int[], int);
+int select_pivot(int[], int);
 
 // main driver
 int main( int argc, char *argv[] )
@@ -37,7 +36,7 @@ int main( int argc, char *argv[] )
 
 	// open outputfile
 	ofstream outfile;
-	cerr << "Output file = " << argv[2] << endl;
+	cerr << "Output file = " << argv[2] << endl <<  endl;
 	outfile.open( argv[2] );
 
     outfile << "Size,NaiveCost,RecursiveCost,IterativeCost" << endl;
@@ -99,17 +98,15 @@ int main( int argc, char *argv[] )
         int qcostm = 0;
         int qbufferm[curr_size];
         copy(buffer, qbufferm, curr_size); 
-        my_qsort(qbufferm, curr_size, select, qcostm);
+        my_qsort(qbufferm, curr_size, select_pivot, qcostm);
         cerr << "Median Pivot Quick Sort Sorted Array: ";
         show(qbufferm, curr_size);
         cerr << "Quick Sort Cost = " << qcostm << endl;
-        cerr << select(buffer, 0, curr_size-1);
-
+			
         cerr << endl;
 	}
 
 	// closing output file
 	outfile.close();
-
 }
 
