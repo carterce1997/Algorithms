@@ -18,7 +18,7 @@ public:
     }
 
     void insert(int x);
-    void del(int x);
+    void delet(const int& x);
     int search(int x);
     void show_inorder(Node* node);
     Node* get_head() { return head; };
