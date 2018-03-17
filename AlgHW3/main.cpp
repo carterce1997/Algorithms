@@ -11,9 +11,10 @@ int main() {
     int n = 8;
     int elements[n] = {7, 8, 3, 5, 4, 6, 2, 1};
     for (int i=0; i < n; ++i) {
+        cerr << "Inserting " << elements[i] << endl;
         t.insert(elements[i]);
     }
-    cerr << "Show tree" << endl;
+    cerr << "Complete tree" << endl;
     t.show_inorder(t.get_head());
     cerr << endl;
 
@@ -32,5 +33,9 @@ int main() {
     t.delet(11);
     t.show_inorder(t.get_head());
     cerr << endl;
+
+    cerr << "There is a  5: " << t.search(5) << endl;
+    cerr << "There is a 132: " << t.search(132) << endl; 
+
     return 0;
 }

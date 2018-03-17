@@ -110,3 +110,20 @@ void BST::delet(const int& x) {
     }
 }
 
+bool BST::search(const int& x) const {
+    Node* curr = head;
+    int value;
+    while(true) {
+        value = curr->get_value();
+        if (x == value) {
+            return true;
+        } else if ((x > value) && (curr->get_right() != NULL)) {
+            curr = curr->get_right();
+        } else if ((x <= value) && (curr->get_left() != NULL)) {
+            curr = curr->get_left();
+        } else {
+            return false;
+        }
+    }
+}
+

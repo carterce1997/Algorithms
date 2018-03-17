@@ -19,9 +19,9 @@ public:
 
     void insert(int x);
     void delet(const int& x);
-    int search(int x);
+    bool search(const int& x) const;
     void show_inorder(Node* node);
-    Node* get_head() { return head; };
+    inline Node* get_head() const { return head; };
 
 };
 
