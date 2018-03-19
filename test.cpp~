@@ -1,0 +1,87 @@
+#include <stdlib.h>
+#include <assert.h>
+#include <iostream>
+#include <fstream>
+
+void recursive_search( int[], int, int&, int&, int& );
+
+using namespace std;
+
+// shuffle array
+void shuffle( int buffer[], int size )
+{
+	srand( time(0) );
+	int index;
+	for (int i=size-1; i>0; i--) {
+		index = rand() % size;
+		swap( buffer[index], buffer[i] );
+	}
+}
+
+// show array
+void show( int buffer[], int size )
+{
+	cerr << "[";
+	for (int i=0; i<size; i++) {
+		cerr << buffer[i] << " ";
+	}
+	cerr << "]" << endl;
+}
+
+
+
+// main driver
+int main( int argc, char *argv[] )
+{
+	int min,max;
+	int cost = 0;
+	int size = 8;	
+	
+	int buffer[] = {2, 8, 4, 5, 7, 37,203,0};
+	
+	show(buffer, size);	
+	shuffle(buffer, size);	
+	show(buffer, size);	
+	recursive_search(buffer,size,min,max,cost);
+	cout<<"Min: "<<buffer[min]<<endl;		
+	cout<<"Max: "<<buffer[max]<<endl;		
+	cout<<"Cost: "<<cost<<endl;	
+	cout<<"Size: "<<size<<endl;	
+	
+	return 0;
+}
+
+
+pair<int,int> recursive_helper( int buffer[], int left, int right, int & cost){
+	
+	if( right == left ){
+		return pair<int,int>(buffer[left], buffer[right]);
+	}	
+	else if( (right - left) == 1 ){
+		++cost;
+		return (buffer[left] < buffer[right]) ? 
+			pair<int,int>(buffer[left], buffer[right]) : pair<int,int>(buffer[right],buffer[left]);
+	}	
+	else{
+		int middle = (left+right) / 2;
+		cout << "Left: " << left << "     middle: "<<(right + left)/2<<"     right: "<<right<<endl;
+		pair<int,int> search_left = recursive_helper(buffer, left, middle, cost );
+		pair<int,int> search_right = recursive_helper(buffer, middle+1, right, cost );
+		
+		// compare min's and max's
+		cost += 2;
+		int min = (search_left.first < search_right.first) ? 
+			search_left.first : search_right.first;
+		int max = (search_left.second > search_right.second) ? 
+			search_left.second : search_right.second;
+		return pair<int,int>(min, max);
+	}
+}
+
+
+void recursive_search( int buffer[], int curr_size, int & min, int & max, int & cost)
+{
+	pair<int,int> min_max = recursive_helper(buffer, 0, curr_size -1, cost);
+	min = min_max.first;
+	max = min_max.second;
+}
