@@ -1,28 +1,36 @@
 #ifndef BST_H
 #define BST_H
 
-#include "node.h"
+#include "tree.h"
 
-using namespace std;
-
-class BST {
-private:
-    Node* head;
-    int height; // tree height
-    int size; // tree size
-
+// Binary Search Tree
+template <class T> 
+class BST : public Tree<T> {
 public:
-    BST() {
-        size = 0;
-        head = NULL;
-    }
+	// constructors
+	BST( const T &v ) 
+		: Tree<T>(v) {}
 
-    void insert(int x);
-    void delet(const int& x);
-    bool search(const int& x) const;
-    void show_inorder(Node* node);
-    inline Node* get_head() const { return head; };
+	BST( const T &v, BST<T> *l, BST<T> *r ) 
+		: Tree<T>(v,l,r) {}
+
+	BST( const T &v, BST<T> *l, BST<T> *r, BST<T> *p ) 
+		: Tree<T>(v,l,r,p) {}
+
+
+	// unvirtualized utilities
+	BST<T> * search( const T &v );	
+		// returns pointer to node (containing value, if exists) or NULL (otherwise)
+
+	BST<T> * insert( const T &v );	
+		// returns pointer to updated tree (which contains value)
+
+	BST<T> * remove( const T &v );	
+		// returns pointer to updated tree (which no longer contains value)
 
 };
 
+#include "bst.cpp"
+
 #endif
+
