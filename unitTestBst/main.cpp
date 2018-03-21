@@ -8,36 +8,37 @@
 
 #include "bst.h"
 
-using namespace std;
+using namespace std; 
 
 int main(){
 	
-	BST<int> bst(8);
-	bst.insert(7);      
-	bst.insert(10);  
-	bst.insert(9);
-	bst.insert(11); 
-		  
+	BST<int> bst(4);
+	BST<int>* tree;
+	tree = bst.insert(9);      
+	tree = bst.insert(2);      
+	tree = bst.insert(8);      
+	tree = bst.insert(11);      
+	tree = bst.insert(29);      
+	tree = bst.insert(18);      
+ 
 	bst.show();
-	//int show = bst.search(5)->getValue();
-	//int show = bst.search(10) == NULL;
-	//cout << show << endl; 	
-	//out << tree->getValue() << endl; 	
-	  
-	bst = *bst.remove(8);  
-	bst = *bst.remove(9);  
-	bst = *bst.remove(11);   
-	bst = *bst.remove(10); 
-	
-	bst.insert(12); 
-	bst.insert(132); 
-	bst.insert(-12); 
 
+	tree = bst.remove(9);
+	tree = bst.remove(8);
+	tree = bst.remove(4);
 	bst.show();  
+	
 	vector<int> vec;
- 	bst.inOrder(vec);
+ 	tree->inOrder(vec);
+	
 	for(int i = 0; i < vec.size(); ++i) cout<< vec[i] << " "; 
 	cout<<endl;
+	tree = bst.remove(2);
+	tree = bst.remove(11);
+	tree = bst.remove(18);
+	tree = bst.remove(29);
+	assert(tree == NULL);
+
 	return 0;
 }
 

@@ -17,7 +17,6 @@ public:
 	BST( const T &v, BST<T> *l, BST<T> *r, BST<T> *p ) 
 		: Tree<T>(v,l,r,p) {}
 
-
 	// unvirtualized utilities
 	BST<T> * search( const T &v );	
 		// returns pointer to node (containing value, if exists) or NULL (otherwise)

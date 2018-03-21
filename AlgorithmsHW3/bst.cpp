@@ -3,34 +3,27 @@
 using namespace std;
 
 // ****************************************************************************
+
 template<class T>
 inline BST<T> * getRootTree(BST<T> * tree){
 	if(tree->getParent() == NULL) return tree;
 	else return getRootTree( (BST<T>*) tree->getParent() );
 }
 
-template<class T>
-inline BST<T> * getMinTree(BST<T> * tree){
-	if(tree->getLeft() == NULL) return tree;
-	else return getMinTree( (BST<T>*) tree->getLeft() );
-}
-
-
 // ****************************************************************************
 
 template<class T>
 BST<T> * BST<T>::insert(const T& x){
 	if(x < this->value){// go left
-		if(left == NULL){
-			this->setRight(new BST(x));
+		if(this->left == NULL){
+			this->setLeft(new BST(x, NULL, NULL, this));
 			return getRootTree(this);
 		}
 		else return (BST*) this->left->insert(x);
 	}
-
 	else{
 		if(this->right == NULL){
-			this->setRight(new BST(x));
+			this->setRight(new BST(x, NULL, NULL, this));
 			return getRootTree(this);
 		}
 		else return (BST*) this->right->insert(x);
@@ -38,96 +31,70 @@ BST<T> * BST<T>::insert(const T& x){
 }
 
 // ****************************************************************************
+
+/* NOTE: This method does not currently delete (free) any nodes. This is because the 
+		 first node created in the constructor is created on the stack (not dynamic).
+         Cannot delete (free) data on the stack. Memory leak is caused here.
+*/
+
 template<class T>
 BST<T> * BST<T>::remove(const T& x) {
-
 	if(x == this->value){
+		
 		// Case (0): 1 node in whole tree
-		if(this->parent == NULL && left == NULL && right == NULL){
-			delete this;
+		if(this->parent == NULL && this->left == NULL && this->right == NULL){
+			// delete this;
 			return NULL;
 		}
-
 		// Case (1): no children
-		if(right == NULL && left == NULL){
-			if(this->getParent()->getLeft()->getValue() == x) this->parent->setLeft(NULL);
+		if(this->right == NULL && this->left == NULL){
+			
+			// make this parent point to null
+			if(this->parent->getValue() > x) this->parent->setLeft(NULL);
 			else this->parent->setRight(NULL);
 
 			BST<T> * root = getRootTree(this);
-			delete this;
+			//delete this;
 			return root;
 		}
-
 		// Case(2): 1 child
-		else if(this->right == NULL && this->left != NULL){
-
-			if(this->parent == NULL){// we are at root node
-				BST<T> * newRoot = (BST<T>*) this->left;
-				newRoot->parent = NULL;
-				delete this;
-				return newRoot;
+		else if((this->right == NULL && this->left != NULL) || (this->right != NULL && this->left == NULL)){
+			// find if child is left or right
+			BST<T> * replacement = (BST<T>*) this->right != NULL ? (BST<T>*) this->right : (BST<T>*) this->left;
+			replacement->setParent(this->parent);
+			
+			// make parent point to replacement (if parent isn't null)
+			if(this->parent != NULL){
+				if(this->parent->getValue() > x) this->parent->setLeft(replacement);
+				else this->parent->setRight(replacement);
 			}
-
-			else{
-				if(this->getParent()->getLeft()->getValue() == x) this->parent->setLeft(this->left);
-				else this->getParent()->setRight(this->left);
-
-				this->getLeft()->setParent(this->parent);
-				BST<T> * root = getRootTree(this);
-				delete this;
-				return root;
-			}
-
+			
+			// delete this;
+			return getRootTree(replacement);
 		}
-		// Case(2): 1 child
-		else if(right != NULL && left == NULL){
-
-			if(this->parent == NULL){// we are at root node
-				BST<T> * newRoot = (BST<T>*) this->right;
-				newRoot->parent = NULL;
-				delete this;
-				return newRoot;
-			}
-
-			else{
-				if(this->getParent()->getLeft()->getValue() == x) this->getParent()->setLeft(this->right);
-				else this->getParent()->setRight(this->right);
-
-				this->getRight()->setParent(this->parent);
-				BST<T> * root = getRootTree(this);
-				delete this;
-				return root;
-			}
-
-		}
-
 		// Case (3): 2 children
 		else{
-			
-			
-			// incomplete
-
-
+			// swap value of this node with successor, and remove successor node from tree
+			BST<T> * succ = (BST<T>*) Tree<T>::successor();			
+			int valueToReplace = succ->value;
+			this->right->remove(valueToReplace);
+			this->setValue(valueToReplace);
+			return getRootTree(this);
 		}
-
-
-
 	}
-
-
+	else if(x < this->value) return (BST<T>*) this->left->remove(x);
+	else return (BST<T>*) this->right->remove(x);
 }
 
 // ****************************************************************************
+
 template<class T>
-BST<T> * BST<T>::search(const T& x) {
-
-    if(x == this->value) return this;
-
+BST<T> * BST<T>::search(const T& x) {    
+	if(x == this->value) return this;
 	else if(x < this->value){
 		if(this->left == NULL) return NULL;
 		else return (BST<T>*) this->left->search(x);
 	}
-
 	else{
 		if(this->right == NULL) return NULL;
 		else return (BST<T>*) this->right->search(x);
