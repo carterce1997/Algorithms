@@ -40,78 +40,56 @@ BST<T> * BST<T>::insert(const T& x){
 // ****************************************************************************
 template<class T>
 BST<T> * BST<T>::remove(const T& x) {
-
+	
+	assert(this != NULL);
+	
 	if(x == this->value){
+		
 		// Case (0): 1 node in whole tree
-		if(this->parent == NULL && left == NULL && right == NULL){
-			delete this;
+		if(this->parent == NULL && this->left == NULL && this->right == NULL){
+			// delete this;
 			return NULL;
 		}
 
 		// Case (1): no children
-		if(right == NULL && left == NULL){
-			if(this->getParent()->getLeft()->getValue() == x) this->parent->setLeft(NULL);
+		if(this->right == NULL && this->left == NULL){
+			if(this->parent->getLeft()->getValue() == x) this->parent->setLeft(NULL);
 			else this->parent->setRight(NULL);
 
 			BST<T> * root = getRootTree(this);
-			delete this;
+			//delete this;
 			return root;
 		}
 
 		// Case(2): 1 child
-		else if(this->right == NULL && this->left != NULL){
-
-			if(this->parent == NULL){// we are at root node
-				BST<T> * newRoot = (BST<T>*) this->left;
-				newRoot->parent = NULL;
-				delete this;
-				return newRoot;
+		else if((this->right == NULL && this->left != NULL) || (this->right != NULL && this->left == NULL)){
+			
+			// find if child is left or right
+			BST<T> * replacement = (BST<T>*) this->right != NULL ? (BST<T>*) this->right : (BST<T>*) this->left;
+			replacement->setParent(this->parent);
+			
+			if(this->parent != NULL){
+				if(this->parent->getLeft()->getValue() == x) this->parent->setLeft(replacement);
+				else this->parent->setRight(replacement);
 			}
-
-			else{
-				if(this->getParent()->getLeft()->getValue() == x) this->parent->setLeft(this->left);
-				else this->getParent()->setRight(this->left);
-
-				this->getLeft()->setParent(this->parent);
-				BST<T> * root = getRootTree(this);
-				delete this;
-				return root;
-			}
-
-		}
-		// Case(2): 1 child
-		else if(right != NULL && left == NULL){
-
-			if(this->parent == NULL){// we are at root node
-				BST<T> * newRoot = (BST<T>*) this->right;
-				newRoot->parent = NULL;
-				delete this;
-				return newRoot;
-			}
-
-			else{
-				if(this->getParent()->getLeft()->getValue() == x) this->getParent()->setLeft(this->right);
-				else this->getParent()->setRight(this->right);
-
-				this->getRight()->setParent(this->parent);
-				BST<T> * root = getRootTree(this);
-				delete this;
-				return root;
-			}
-
+			
+			// delete this;
+			return getRootTree(replacement);
 		}
 
 		// Case (3): 2 children
 		else{
 
-
+			// swap value of this node with successor, and remove successor from tree
+			BST<T> * succ = (BST<T>*) Tree<T>::successor();			
+			int valueToReplace = succ->value;
+			this->right->remove(valueToReplace);
+			this->setValue(valueToReplace);
+			return getRootTree(this);
 		}
-
-
-
 	}
-
-
+	else if(x < this->value) return (BST<T>*) this->left->remove(x);
+	else return (BST<T>*) this->right->remove(x);
 }
 
 // ****************************************************************************
