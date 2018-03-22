@@ -60,17 +60,17 @@ BST<T> * BST<T>::remove(const T& x) {
 		// Case(2): 1 child
 		else if((this->right == NULL && this->left != NULL) || (this->right != NULL && this->left == NULL)){
 			// find if child is left or right
-			BST<T> * replacement = (BST<T>*) this->right != NULL ? (BST<T>*) this->right : (BST<T>*) this->left;
-			replacement->setParent(this->parent);
+			BST<T> * child = (BST<T>*) this->right != NULL ? (BST<T>*) this->right : (BST<T>*) this->left;
+			child->setParent(this->parent);
 			
-			// make parent point to replacement (if parent isn't null)
+			// make parent point to child (if parent isn't null)
 			if(this->parent != NULL){
-				if(this->parent->getValue() > x) this->parent->setLeft(replacement);
-				else this->parent->setRight(replacement);
+				if(this->parent->getValue() > x)this->parent->setLeft(child);
+				else this->parent->setRight(child);
 			}
 			
 			// delete this;
-			return getRootTree(replacement);
+			return getRootTree(child);
 		}
 		// Case (3): 2 children
 		else{
@@ -89,7 +89,7 @@ BST<T> * BST<T>::remove(const T& x) {
 // ****************************************************************************
 
 template<class T>
-BST<T> * BST<T>::search(const T& x) {    
+BST<T> * BST<T>::search(const T& x){
 	if(x == this->value) return this;
 	else if(x < this->value){
 		if(this->left == NULL) return NULL;
@@ -100,4 +100,3 @@ BST<T> * BST<T>::search(const T& x) {
 		else return (BST<T>*) this->right->search(x);
 	}
 }
-

@@ -12,32 +12,66 @@ using namespace std;
 
 int main(){
 	
-	BST<int> bst(4);
-	BST<int>* tree;
-	tree = bst.insert(9);      
-	tree = bst.insert(2);      
-	tree = bst.insert(8);      
-	tree = bst.insert(11);      
-	tree = bst.insert(29);      
-	tree = bst.insert(18);      
- 
-	bst.show();
+	BST<int> * tree = new BST<int>(1);
+	tree = tree->insert(5);      
+	tree = tree->insert(3);      
+	tree = tree->insert(0);      
+	tree = tree->insert(6);      
+	tree = tree->insert(4);      
+	tree = tree->insert(2);      
+	tree = tree->insert(1);      
+      
+   
 
-	tree = bst.remove(9);
-	tree = bst.remove(8);
-	tree = bst.remove(4);
-	bst.show();  
+	//bst.show();  
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
 	
-	vector<int> vec;
- 	tree->inOrder(vec);
+//	vector<int> vec;
+// 	tree->inOrder(vec);
 	
-	for(int i = 0; i < vec.size(); ++i) cout<< vec[i] << " "; 
-	cout<<endl;
-	tree = bst.remove(2);
-	tree = bst.remove(11);
-	tree = bst.remove(18);
-	tree = bst.remove(29);
-	assert(tree == NULL);
+//	for(int i = 0; i < vec.size(); ++i) cout<< vec[i] << " "; 
+//	cout<<endl;
+		
+	tree->show();  
+
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	
+	tree = tree->remove(1);
+	
+	tree->show();  
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	
+	tree = tree->remove(5);
+	tree->show();  
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	
+	tree = tree->remove(3);
+	tree->show(); 
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	
+	tree = tree->remove(0);
+	tree->show(); 
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	
+	tree = tree->remove(6);
+	tree->show(); 
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	cout<<endl<<endl;
+	
+
 
 	return 0;
 }
