@@ -4,14 +4,15 @@ using namespace std;
 
 // ***********************updateHeight*****************************************************
 
+// recurse up tree fixing heights
 template<class T>
 AVL<T> * fixHeightTree(AVL<T> * tree){
 	tree->updateHeight();
 	
-	int rightHeight = tree->getRight() == NULL ? 0 : tree->getHeight();
-	int leftHeight = tree->getLeft() == NULL ? 0 : tree->getHeight();
+	int rightHeight = tree->getRight() == NULL ? 0 : tree->getRight()->getHeight();
+	int leftHeight = tree->getLeft() == NULL ? 0 : tree->getLeft()->getHeight();
 	
-	if( (rightHeight-leftHeight) > 1){// right-heavy
+	if( (rightHeight-leftHeight) > 1){// right-left or right-right case
 			
 	}
 	else if( (rightHeight-leftHeight) < -1){// left-heavy
