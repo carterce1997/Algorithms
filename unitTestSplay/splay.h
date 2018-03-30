@@ -10,19 +10,19 @@ class Splay : public Tree<T> {
 public:
 	// constructors
 	Splay( const T &v ) 
-		: Tree<T>(v), type(UNDEFINED) { root = this; }
+		: Tree<T>(v), type(UNDEFINED) { }
 
 	Splay( const T &v, childType t ) 
-		: Tree<T>(v), type(t) { root = this; }
+		: Tree<T>(v), type(t) { }
 
 	Splay( const T &v, Splay<T> *l, Splay<T> *r ) 
-		: Tree<T>(v,l,r,NULL), type(UNDEFINED) { root = this; }
+		: Tree<T>(v,l,r,NULL), type(UNDEFINED) { }
 
 	Splay( const T &v, Splay<T> *l, Splay<T> *r, Splay<T> *p ) 
-		: Tree<T>(v,l,r,p), type(UNDEFINED) { root = this; }
+		: Tree<T>(v,l,r,p), type(UNDEFINED) { }
 
 	Splay( const T &v, Splay<T> *l, Splay<T> *r, Splay<T> *p, childType t )
-		: Tree<T>(v,l,r,p), type(t) { root = this; }
+		: Tree<T>(v,l,r,p), type(t) { }
 
 	// cloners
 	Splay( const Splay<T> &c ) 
@@ -34,7 +34,7 @@ public:
 
 	// accessors
 	childType getType() { return type; }
-	Splay<T> *getRoot() { return root; }; // returns root of splay tree
+	Splay<T> *getRoot() { return this; }; // returns root of splay tree
 
 	// mutators
 	void setType( childType c ) { type = c; }
@@ -51,12 +51,14 @@ public:
 		// returns pointer to updated tree (after deletion): root contains parent
 
 
-	void splay();
+	void splay( Splay<T>* t );
 		// perform a splay operation on tree
+
+    void zig( Splay<T>* t ); // right rotate
+    void zag( Splay<T>* t ); // left rotate
 
 private:
 	childType type; 
-    Splay<T>* root;
 
 	// hidden utilities
 	void splay_search( const T & v );

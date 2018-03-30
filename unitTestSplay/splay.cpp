@@ -1,5 +1,52 @@
 #include <iostream>
 
+using std::cerr;
+using std::endl;
+
+template <class T>
+void Splay<T>::zig( Splay<T>* t ) { // right rotation
+    Splay<T>* newRight = new Splay<T>(this->getValue(), RIGHT);
+    Splay<T>* newLeft;
+
+    newRight->setRight(this->getRight());
+    newRight->setLeft(t->getRight());
+    newRight->setParent(this);
+
+    newLeft = (Splay<T>*)t->getLeft();
+    newLeft->setParent(this);
+    newLeft->setType(LEFT);
+
+    this->setLeft(newLeft);
+    this->setRight(newRight);
+    this->setValue(t->getValue());
+
+    delete t;
+}
+
+template <class T>
+void Splay<T>::zag( Splay<T>* t ) { // left rotation
+    Splay<T>* newLeft = new Splay<T>(this->getValue());
+    Splay<T>* newRight = (Splay<T>*)t->getRight();
+    newRight->setType(RIGHT);
+
+    newLeft->setLeft(this->getLeft());
+    newLeft->setRight(t->getLeft());
+    newLeft->setParent(this);
+    newLeft->setType(LEFT);
+
+    newRight->setParent(this);
+
+    this->setLeft(newLeft);
+    this->setRight(newRight);
+    this->setValue(t->getValue());
+
+    delete t;
+}
+
+template <class T>
+void Splay<T>::splay( Splay<T>* t ) {
+}
+
 template <class T>
 Splay<T> * Splay<T>::insert( const T& v )
 {
@@ -51,7 +98,7 @@ Splay<T> * Splay<T>::remove( const T& v ) {
             else this->parent->setRight(NULL);
 
             //delete this;
-            return root;
+            return this;
         }
         // Case(2): 1 child
         else if((this->right == NULL && this->left != NULL) || (this->right != NULL && this->left == NULL)){
@@ -66,7 +113,7 @@ Splay<T> * Splay<T>::remove( const T& v ) {
             }
 
             // delete this;
-            return root;
+            return this;
         }
         // Case (3): 2 children
         else{
@@ -75,7 +122,7 @@ Splay<T> * Splay<T>::remove( const T& v ) {
             int valueToReplace = succ->value;
             this->right->remove(valueToReplace);
             this->setValue(valueToReplace);
-            return root;
+            return this;
         }
     }
     else if(v < this->value) return (Splay<T>*) this->left->remove(v);

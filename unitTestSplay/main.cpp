@@ -1,17 +1,26 @@
 #include <iostream>
 #include "splay.h"
 
-int main() {
-    Splay<int> *s = new Splay<int>(4);
+using std::cerr;
+using std::endl;
 
-    s->insert(5);
-    s->insert(2);
+int main() {
+    Splay<int> *s = new Splay<int>(5);
+
     s->insert(3);
+    s->insert(4);
+    s->insert(2);
+    s->insert(6);
     s->show();
 
-    std::cout << s->search(3)->getValue() << std::endl;
+    cerr << "Right rotate (zig) about 3" << endl;
 
-    s->remove(3);
+    s->zig(s->search(3));
+    s->show();
+
+    cerr << "Left rotate (zag) about 5" << endl;
+
+    s->zag(s->search(5));
     s->show();
 
     return 0;
