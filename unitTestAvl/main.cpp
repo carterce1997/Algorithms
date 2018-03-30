@@ -11,7 +11,7 @@
 using namespace std; 
 
 int main(){
-	
+ 	AVL<int>* tree = new AVL<int>(1); 
        
 
 	return 0;
