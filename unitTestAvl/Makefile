@@ -11,4 +11,5 @@ $(EXEC): $(OBJ)
 
 .cpp.o: $(CC) $(FLAGS) -c $< -o $@
 
-clean: rm -f $(EXEC) $(OBJ)
+clean: 
+	rm -f $(EXEC) $(OBJ)
