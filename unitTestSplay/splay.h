@@ -56,6 +56,14 @@ public:
 
     void zig( Splay<T>* t ); // right rotate
     void zag( Splay<T>* t ); // left rotate
+    void zigzig( Splay<T>* t ); // right right rotate
+    void zigzag( Splay<T>* t ); // right right rotate
+    void zagzig( Splay<T>* t ); // right right rotate
+    void zagzag( Splay<T>* t ); // right right rotate
+
+
+
+
 
 private:
 	childType type; 

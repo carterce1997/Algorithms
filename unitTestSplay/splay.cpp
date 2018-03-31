@@ -5,46 +5,80 @@ using std::endl;
 
 template <class T>
 void Splay<T>::zig( Splay<T>* t ) { // right rotation
-    Splay<T>* newRight = new Splay<T>(this->getValue(), RIGHT);
-    Splay<T>* newLeft;
+    Splay<T>* parent = (Splay<T>*) t->getParent();   
 
-    newRight->setRight(this->getRight());
+    Splay<T>* newRight = new Splay<T>(parent->getValue(), RIGHT);
+    Splay<T>* newLeft = (Splay<T>*) t->getLeft();
+
+    newRight->setRight(parent->getRight());
     newRight->setLeft(t->getRight());
-    newRight->setParent(this);
+    newRight->setParent(parent);
 
-    newLeft = (Splay<T>*)t->getLeft();
-    newLeft->setParent(this);
+    newLeft->setParent(parent);
     newLeft->setType(LEFT);
 
-    this->setLeft(newLeft);
-    this->setRight(newRight);
-    this->setValue(t->getValue());
+    parent->setLeft(newLeft);
+    parent->setRight(newRight);
+    parent->setValue(t->getValue());
 
     delete t;
 }
 
 template <class T>
 void Splay<T>::zag( Splay<T>* t ) { // left rotation
-    Splay<T>* newLeft = new Splay<T>(this->getValue());
+    Splay<T>* parent = (Splay<T>*) t->getParent();
+
+    Splay<T>* newLeft = new Splay<T>(parent->getValue());
     Splay<T>* newRight = (Splay<T>*)t->getRight();
     newRight->setType(RIGHT);
 
-    newLeft->setLeft(this->getLeft());
+    newLeft->setLeft(parent->getLeft());
     newLeft->setRight(t->getLeft());
-    newLeft->setParent(this);
+    newLeft->setParent(parent);
     newLeft->setType(LEFT);
 
-    newRight->setParent(this);
+    newRight->setParent(parent);
 
-    this->setLeft(newLeft);
-    this->setRight(newRight);
-    this->setValue(t->getValue());
+    parent->setLeft(newLeft);
+    parent->setRight(newRight);
+    parent->setValue(t->getValue());
 
     delete t;
 }
 
 template <class T>
+void Splay<T>::zigzig( Splay<T>* t ) { // right right rotate
+    Splay<T>* parent = (Splay<T>*) t->getParent();
+    Splay<T>::zig(t);
+    Splay<T>::zig(parent);
+}
+
+template <class T>
+void Splay<T>::zigzag( Splay<T>* t ) { // right left rotate
+    Splay<T>* parent = (Splay<T>*) t->getParent();
+    Splay<T>::zig(t);
+    Splay<T>::zag(parent);
+}
+
+template <class T>
+void Splay<T>::zagzig( Splay<T>* t ) {
+    Splay<T>* parent = (Splay<T>*) t->getParent();
+    Splay<T>::zag(t);
+    Splay<T>::zig(parent);
+}
+
+template <class T>
+void Splay<T>::zagzag( Splay<T>* t ) {
+    Splay<T>* parent = (Splay<T>*) t->getParent();
+    Splay<T>::zag(t);
+    Splay<T>::zag(parent);
+}
+
+
+template <class T>
 void Splay<T>::splay( Splay<T>* t ) {
+    
+
 }
 
 template <class T>
