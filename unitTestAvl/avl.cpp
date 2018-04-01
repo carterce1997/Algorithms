@@ -9,8 +9,8 @@ const int RIGHT_HEAVY = -2;
 
 template<class T>
 int balanceDiff(AVL<T> * tree){
-	int rightHeight = tree->getRight() == NULL ? 0 : tree->getRight()->getHeight();
-	int leftHeight = tree->getLeft() == NULL ? 0 : tree->getLeft()->getHeight();
+	int rightHeight = tree->getRight() == NULL ? 0 : tree->getRight()->getHeight()+1;
+	int leftHeight = tree->getLeft() == NULL ? 0 : tree->getLeft()->getHeight()+1;
 	return leftHeight - rightHeight;
 }
 
@@ -18,10 +18,64 @@ int balanceDiff(AVL<T> * tree){
 
 template<class T>
 bool isLeftHeavy(AVL<T> * tree){
+	if(tree == NULL) return false;
 	return balanceDiff(tree) > 0;
 }
 
 // ****************************************************************************
+
+template<class T>
+AVL<T> * rightRotate(AVL<T> * root){
+	AVL<T> * pivot = (AVL<T>*) root->getLeft();
+	
+	// set pivot's parent
+	pivot->setParent( root->getParent() );
+	if(pivot->getParent() != NULL){
+		// check what side pivot is on of parent
+		if(root->getParent()->getRight()->getValue() == root->getValue()) root->getParent()->setRight(pivot);
+		else root->getParent()->setLeft(pivot);
+	}
+
+	// set up this's left child
+	root->setLeft(pivot->getRight());
+	if(pivot->getRight() != NULL) pivot->getRight()->setParent(root);
+
+	// set pivot's right child
+	pivot->setRight(root);
+	root->setParent(pivot);
+
+	((Tree<T>*)pivot)->updateHeight();
+	return pivot;
+}
+
+// ****************************************************************************
+
+template<class T>
+AVL<T> * leftRotate(AVL<T> * root){
+	AVL<T> * pivot = (AVL<T>*) root->getRight();
+
+	// set pivot's parent
+	pivot->setParent( root->getParent() );
+	if(pivot->getParent() != NULL){
+		// check what side pivot is on of parent
+		if(root->getParent()->getRight()->getValue() == root->getValue()) root->getParent()->setRight(pivot);
+		else root->getParent()->setLeft(pivot);
+	}
+
+	// set up this's right child
+	root->setRight(pivot->getLeft());
+	if(pivot->getLeft() != NULL) pivot->getLeft()->setParent(root);
+
+	// set pivot's left child
+	pivot->setLeft(root);
+	root->setParent(pivot);
+
+	((Tree<T>*)pivot)->updateHeight();
+	return pivot;
+}
+
+// ****************************************************************************
+
 
 // balance this node => return new root
 template<class T>
@@ -29,50 +83,41 @@ AVL<T> * AVL<T>::balance(){
 	Tree<T>::updateHeight();
 	int balance = balanceDiff(this);
 	
-	if( balance >= LEFT_HEAVY ){// left-left or left-right case
+	//cout << "this->value: " << this->value << "\t" << "this->height: " << this->height <<"\t";
+	//cout << "Balance: " << balance << endl;
+	
+	AVL<T> * pivot = NULL;
+	if( balance >= LEFT_HEAVY ){
 		
-		AVL<T> * pivot = NULL;
-		if( isLeftHeavy((AVL<T>*)this->left) ){// left left case => right rotation
-			 pivot = (AVL<T>*) this->left;
-			
-			// set pivot's parent
-			pivot->parent = this->parent;
-			if(pivot->parent != NULL){
-				// check what side pivot is on of parent
-				if(pivot->parent->getRight()->getValue() == this->value) pivot->getParent()->setRight(pivot);
-				else pivot->getParent()->setLeft(pivot);
-			}
-			
-			// set up this's left child
-			this->left = pivot->right;
-			if(pivot->right != NULL) pivot->right->setParent(this);
-			
-			// set pivot's right child
-			pivot->right = this;
-			this->parent = pivot;
-
-			((Tree<T>*)pivot)->updateHeight();
+		if( isLeftHeavy((AVL<T>*)this->left) ){	// left left case
+			pivot = rightRotate(this);
 		}
-		else{
-			// left left case => left rotation then right rotation
+		else{									// left right case
+			pivot = leftRotate((AVL<T>*)this->left);
+			pivot = rightRotate(this);
 		}
 		
 		if(pivot->parent == NULL) return pivot;
 		else return pivot->balance();
 	}
 	else if( balance <= RIGHT_HEAVY ){// right-left or right-right case
-		if( 0 ){
-			// right left case
+
+		if( isLeftHeavy((AVL<T>*)this->left) ){	// right-left case
+			pivot = rightRotate((AVL<T>*)this->right);
+			pivot = leftRotate(this);
 		}
-		else{
-			// right right case
+		else{									// right right case
+			pivot = leftRotate(this);
 		}
+		
+		if(pivot->parent == NULL) return pivot;
+		else return pivot->balance();
 	}
 	
 	// update height
 	// balance parent;
 	if(this->parent == NULL) return this;
-	else return balance();
+	else return ((AVL<T>*)this->parent)->balance();
 }
 
 // ****************************************************************************
