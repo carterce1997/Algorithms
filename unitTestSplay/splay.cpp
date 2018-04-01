@@ -4,81 +4,120 @@ using std::cerr;
 using std::endl;
 
 template <class T>
-void Splay<T>::zig( Splay<T>* t ) { // right rotation
-    Splay<T>* parent = (Splay<T>*) t->getParent();   
+void Splay<T>::zig( Splay<T>* t ) { 
+    /*
+    * RIGHT ROTATION - BRINGS t TO ROOT OF SUBTREE
+    */
 
+    Splay<T>* parent = (Splay<T>*) t->getParent();  // parent of the node to be splayed 
+
+    // right subtree created
     Splay<T>* newRight = new Splay<T>(parent->getValue(), RIGHT);
     Splay<T>* newLeft = (Splay<T>*) t->getLeft();
 
+    // right rotation occurs here
     newRight->setRight(parent->getRight());
     newRight->setLeft(t->getRight());
     newRight->setParent(parent);
 
-    newLeft->setParent(parent);
-    newLeft->setType(LEFT);
-
+    if (newLeft != NULL) {
+        newLeft->setParent(parent);
+        newLeft->setType(LEFT);
+    }
+    
+    // clean up pointers
     parent->setLeft(newLeft);
     parent->setRight(newRight);
     parent->setValue(t->getValue());
-
+    
+    // delete old node (replaced with new node)
     delete t;
 }
 
 template <class T>
 void Splay<T>::zag( Splay<T>* t ) { // left rotation
-    Splay<T>* parent = (Splay<T>*) t->getParent();
+    /*
+    * LEFT ROTATION - BRINGS t TO ROOT OF SUBTREE
+    */
+    
+    Splay<T>* parent = (Splay<T>*) t->getParent(); // parent of the node to be splayed
 
-    Splay<T>* newLeft = new Splay<T>(parent->getValue());
+    // new left subtree created
+    Splay<T>* newLeft = new Splay<T>(parent->getValue(), LEFT);
     Splay<T>* newRight = (Splay<T>*)t->getRight();
-    newRight->setType(RIGHT);
 
+    // left rotation occurs here
     newLeft->setLeft(parent->getLeft());
     newLeft->setRight(t->getLeft());
     newLeft->setParent(parent);
-    newLeft->setType(LEFT);
 
-    newRight->setParent(parent);
+    if (newRight != NULL) {
+        newRight->setParent(parent);
+        newRight->setType(RIGHT);
+    }
 
+    // clean up pointers
     parent->setLeft(newLeft);
     parent->setRight(newRight);
     parent->setValue(t->getValue());
 
+    // delete old node (replaced with new node)
     delete t;
 }
 
 template <class T>
 void Splay<T>::zigzig( Splay<T>* t ) { // right right rotate
-    Splay<T>* parent = (Splay<T>*) t->getParent();
-    Splay<T>::zig(t);
-    Splay<T>::zig(parent);
+    Splay<T>* parent = (Splay<T>*) t->getParent(); // parent of splayed node
+    Splay<T>::zig(t); // rotate node right
+    Splay<T>::zig(parent); // rotate parent right
 }
 
 template <class T>
 void Splay<T>::zigzag( Splay<T>* t ) { // right left rotate
-    Splay<T>* parent = (Splay<T>*) t->getParent();
-    Splay<T>::zig(t);
-    Splay<T>::zag(parent);
+    Splay<T>* parent = (Splay<T>*) t->getParent(); // parent of splayed node
+    Splay<T>::zig(t); // rotate node right
+    Splay<T>::zag(parent); // rotate parent left
 }
 
 template <class T>
-void Splay<T>::zagzig( Splay<T>* t ) {
-    Splay<T>* parent = (Splay<T>*) t->getParent();
-    Splay<T>::zag(t);
-    Splay<T>::zig(parent);
+void Splay<T>::zagzig( Splay<T>* t ) { // left right rotate
+    Splay<T>* parent = (Splay<T>*) t->getParent(); // parent of splayed node
+    Splay<T>::zag(t); // rotate node left
+    Splay<T>::zig(parent); // rotate parent right
 }
 
 template <class T>
-void Splay<T>::zagzag( Splay<T>* t ) {
-    Splay<T>* parent = (Splay<T>*) t->getParent();
-    Splay<T>::zag(t);
-    Splay<T>::zag(parent);
+void Splay<T>::zagzag( Splay<T>* t ) { // left left rotate
+    Splay<T>* parent = (Splay<T>*) t->getParent(); // parent of splayed node
+    Splay<T>::zag(t); // rotate node left
+    Splay<T>::zag(parent); // rotate parent left
 }
 
 
 template <class T>
-void Splay<T>::splay( Splay<T>* t ) {
-    
-
+Splay<T>* Splay<T>::splay( Tree<T>* t ) {
+    Splay<T>* ts = (Splay<T>*) t;
+    if (ts == this) { 
+        return (Splay<T>*)this;
+    } else if (ts->getType() == RIGHT && ts->getParent()->getParent() == NULL) {
+        zag(ts);
+        return (Splay<T>*)this;
+    } else if (ts->getType() == LEFT && ts->getParent()->getParent() == NULL) {
+        zig(ts);
+        return (Splay<T>*)this;
+    } else if (ts->getType() == RIGHT && ((Splay<T>*)(ts->getParent()))->getType() == LEFT) {
+        zagzig(ts);
+        return splay(ts->getParent()->getParent());
+    } else if (ts->getType() == LEFT && ((Splay<T>*)(ts->getParent()))->getType() == RIGHT) {
+        zigzag(ts);
+        return splay(ts->getParent()->getParent());
+    } else if (ts->getType() == LEFT && ((Splay<T>*)(ts->getParent()))->getType() == LEFT) {
+        zigzig(ts);
+        return splay(ts->getParent());
+    } else if (ts->getType() == RIGHT && ((Splay<T>*)(ts->getParent()))->getType() == RIGHT) {
+        zagzag(ts);
+        return splay(ts->getParent());
+    }
 }
 
 template <class T>

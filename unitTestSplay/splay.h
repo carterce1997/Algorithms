@@ -51,21 +51,16 @@ public:
 		// returns pointer to updated tree (after deletion): root contains parent
 
 
-	void splay( Splay<T>* t );
+	Splay<T>* splay( Tree<T>* t );
 		// perform a splay operation on tree
-
+private:
     void zig( Splay<T>* t ); // right rotate
     void zag( Splay<T>* t ); // left rotate
     void zigzig( Splay<T>* t ); // right right rotate
-    void zigzag( Splay<T>* t ); // right right rotate
-    void zagzig( Splay<T>* t ); // right right rotate
-    void zagzag( Splay<T>* t ); // right right rotate
+    void zigzag( Splay<T>* t ); // right left rotate
+    void zagzig( Splay<T>* t ); // left right rotate
+    void zagzag( Splay<T>* t ); // left left rotate
 
-
-
-
-
-private:
 	childType type; 
 
 	// hidden utilities

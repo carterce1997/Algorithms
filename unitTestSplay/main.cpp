@@ -15,10 +15,11 @@ int main() {
     s->insert(7);
     s->show();
 
-    s->zagzig(s->search(4));
-//    s->zag(s->search(4));
-//    s->zig(s->search(4));
-//    s->zig(s->search(2));
+    s->splay(s->search(5));
+    s->show();
+    s->splay(s->search(2));
+    s->show();
+    s->splay(s->search(7));
     s->show();
 
     return 0;
