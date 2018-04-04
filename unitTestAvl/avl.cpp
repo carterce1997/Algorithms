@@ -173,9 +173,49 @@ AVL<T> * AVL<T>::insert(const T& x){
 
 template<class T>
 AVL<T> * AVL<T>::remove(const T& x) {
+	if(x == this->value){
+		// Case (0): 1 node in whole tree
+		if(this->parent == NULL && this->left == NULL && this->right == NULL){
+			// delete this;
+			return NULL;
+		}
+		// Case (1): no children
+		if(this->right == NULL && this->left == NULL){
+			
+			// make this parent point to null
+			if(this->parent->getValue() > x) this->parent->setLeft(NULL);
+			else this->parent->setRight(NULL);
 
-	
-	
+			//delete this;
+			return ((AVL<T>*)(this->parent))->balance();
+		}
+		// Case(2): 1 child
+		else if((this->right == NULL && this->left != NULL) || (this->right != NULL && this->left == NULL)){
+			// find if child is left or right
+			AVL<T> * child = (AVL<T>*) this->right != NULL ? (AVL<T>*) this->right : (AVL<T>*) this->left;
+			child->setParent(this->parent);
+			
+			// make parent point to child (if parent isn't null)
+			if(this->parent != NULL){
+				if(this->parent->getValue() > x)this->parent->setLeft(child);
+				else this->parent->setRight(child);
+			}
+			
+			// delete this;
+			return child->balance();
+		}
+		// Case (3): 2 children
+		else{
+			// swap value of this node with successor, and remove successor node from tree
+			AVL<T> * succ = (AVL<T>*) Tree<T>::successor();			
+			int valueToReplace = succ->value;
+			this->right->remove(valueToReplace);
+			this->setValue(valueToReplace);
+			return this->balance();
+		}
+	}
+	else if(x < this->value) return (AVL<T>*) this->left->remove(x);
+	else return (AVL<T>*) this->right->remove(x);	
 }
 
 // ****************************************************************************

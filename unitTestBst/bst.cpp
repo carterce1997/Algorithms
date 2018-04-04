@@ -40,7 +40,6 @@ BST<T> * BST<T>::insert(const T& x){
 template<class T>
 BST<T> * BST<T>::remove(const T& x) {
 	if(x == this->value){
-		
 		// Case (0): 1 node in whole tree
 		if(this->parent == NULL && this->left == NULL && this->right == NULL){
 			// delete this;

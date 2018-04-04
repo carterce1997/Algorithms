@@ -34,7 +34,7 @@ BST<T> * BST<T>::insert(const T& x){
 
 /* NOTE: This method does not currently delete (free) any nodes. This is because the 
 		 first node created in the constructor is created on the stack (not dynamic).
-         Cannot delete (free) data on the stack. Memory leak is caused here.
+         Cannot delete (free) data on the stack. Memory leak is caused here. No bueno
 */
 
 template<class T>

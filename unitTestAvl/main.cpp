@@ -18,9 +18,8 @@ int main(){
 	tree = tree->insert(7);
 	tree->show();
 	
-	
-	
 	tree = tree->insert(149);
+	tree = tree->remove(149);
 	tree = tree->insert(2);
 	
 	tree = tree->insert(3);
@@ -60,10 +59,34 @@ int main(){
 	tree = tree->insert(-599);
 	tree = tree->insert(-699);
 	tree = tree->insert(699);
+	
 	tree->inOrder(inOrder);
 	tree->show();
 	
+	for(int i = 3000; i < 3500; ++i){
+		tree = tree->insert(i);
+	}
 	
+	for(int i = -1300; i > -1800; --i){
+		tree = tree->insert(i);
+	}
+	
+	tree->inOrder(inOrder);
+	tree->show();
+	
+	for(int i = 3000; i < 3500; ++i){
+		tree = tree->remove(i);
+	}
+	
+	tree->inOrder(inOrder);
+	tree->show();
+	
+	for(int i = -1300; i > -1800; --i){
+		tree = tree->remove(i);
+	}
+	
+	tree->inOrder(inOrder);
+	tree->show();
 	
 	cout<<endl;
 	return 0;
