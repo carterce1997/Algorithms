@@ -10,16 +10,16 @@ class Splay : public Tree<T> {
 public:
 	// constructors
 	Splay( const T &v ) 
-		: Tree<T>(v), type(UNDEFINED) { }
+		: Tree<T>(v), type(ROOT) { }
 
 	Splay( const T &v, childType t ) 
 		: Tree<T>(v), type(t) { }
 
 	Splay( const T &v, Splay<T> *l, Splay<T> *r ) 
-		: Tree<T>(v,l,r,NULL), type(UNDEFINED) { }
+		: Tree<T>(v,l,r,NULL), type(ROOT) { }
 
 	Splay( const T &v, Splay<T> *l, Splay<T> *r, Splay<T> *p ) 
-		: Tree<T>(v,l,r,p), type(UNDEFINED) { }
+		: Tree<T>(v,l,r,p), type(ROOT) { }
 
 	Splay( const T &v, Splay<T> *l, Splay<T> *r, Splay<T> *p, childType t )
 		: Tree<T>(v,l,r,p), type(t) { }
@@ -53,13 +53,15 @@ public:
 
 	Splay<T>* splay( Tree<T>* t );
 		// perform a splay operation on tree
+    Splay<T>* zig( Splay<T>* t ); // right rotate
+    Splay<T>* zag( Splay<T>* t ); // left rotate
+    Splay<T>* zigzig( Splay<T>* t ); // right right rotate
+    Splay<T>* zigzag( Splay<T>* t ); // right left rotate
+    Splay<T>* zagzig( Splay<T>* t ); // left right rotate
+    Splay<T>* zagzag( Splay<T>* t ); // left left rotate
+
 private:
-    void zig( Splay<T>* t ); // right rotate
-    void zag( Splay<T>* t ); // left rotate
-    void zigzig( Splay<T>* t ); // right right rotate
-    void zigzag( Splay<T>* t ); // right left rotate
-    void zagzig( Splay<T>* t ); // left right rotate
-    void zagzag( Splay<T>* t ); // left left rotate
+    static Splay<T>* successor( Splay<T>* t );
 
 	childType type; 
 
