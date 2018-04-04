@@ -60,7 +60,17 @@ void Tree<T>::inOrder( vector<T> &sequence ) const
 	{
 		left->inOrder( sequence );
 	}
+	
+	int rightHeight = right == NULL ? 0 : right->height;
+	int leftHeight = left == NULL ? 0 : left->height;
+	//cout << "value: " << value << endl; 
+	//cout << "leftHeight: " << leftHeight << endl; 
+	//cout << "rightHeight: " << rightHeight << endl << endl; 
+	cout << leftHeight - rightHeight << "\t" <<  value <<endl;
+	
+	//cout<<
 
+	
 	sequence.push_back(value);
 
 	if (right != NULL)
