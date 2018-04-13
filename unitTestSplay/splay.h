@@ -59,6 +59,8 @@ public:
     Splay<T>* zigzag( Splay<T>* t ); // right left rotate
     Splay<T>* zagzig( Splay<T>* t ); // left right rotate
     Splay<T>* zagzag( Splay<T>* t ); // left left rotate
+    
+    void shows( int spaces, int side ) const;
 
 private:
     static Splay<T>* successor( Splay<T>* t );

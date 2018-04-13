@@ -229,3 +229,36 @@ Splay<T> * Splay<T>::remove( const T& v ) {
     else return (Splay<T>*) this->right->remove(v);
 }
 
+template <class T>
+void Splay<T>::shows( int spaces, int side ) const
+{
+    for (int i = 0; i < spaces; i++)
+    {
+        cerr << " ";
+    }
+
+    if (side < 0)
+    {
+        cerr << "<" << this->value << type << "]" << endl;
+    }
+    else if (side > 0)
+    {
+        cerr << "[" << this->value << type  << ">" << endl;
+    }
+    else
+    {
+        cerr << "[" << this->value << type << "]" << endl;
+    }
+
+    if (left != NULL)
+    {
+        ((Splay<T>*)(this->left))->shows( spaces+4, -1 );
+    }
+
+    if (right != NULL)
+    {
+        ((Splay<T>*)(this->right))->shows( spaces+4, +1 );
+    }
+
+}
+
