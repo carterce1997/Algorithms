@@ -1,0 +1,307 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <map>
+#include <queue>
+#include <stack>
+#include <assert.h>
+#include <time.h>
+using namespace std;
+
+
+/////////////////////////////////////////////////////////
+// constructors
+/////////////////////////////////////////////////////////
+
+// construct a random graph
+template <class T>
+Graph<T>::Graph( const vector<T> &vertex_set, bool is_directed )
+{
+	// FILL IN
+
+	// establish size and directedness
+	size = vertex_set.size();
+	directed = is_directed;
+
+	// seed random 
+	srand (time(NULL));
+
+	// for each element in the input vector, create a vector of random size and add to it a random connection
+	for ( typename vector<T>::const_iterator itKey = vertex_set.begin(); itKey != vertex_set.end(); ++itKey ){
+
+		// get key value and create new vector
+		T valueKey = *itKey;
+		vector<T> adjacentVertices;
+
+		// generate random value within the input vector
+		int randomVal = rand() % size + 1;
+		
+		// This random value will be connected to the key value
+		T valueConnected = vertex_set.at(randomVal);
+		adjacentVertices.push_back(valueConnected);
+
+		// Add to the adjacency list
+		adjacency_list.insert(pair< T,vector<T> >(valueKey,adjacentVertices));
+	}
+	
+}
+
+/////////////////////////////////////////////////////////
+// accessors
+/////////////////////////////////////////////////////////
+
+template <class T>
+vector<T> Graph<T>::vertices()
+{
+	vector<T> vertex_set;
+
+	for (vertex_iterator i = begin(); i != end(); i++) {
+		vertex_set.push_back(i->first);
+	}
+	return vertex_set;
+}
+
+
+
+/////////////////////////////////////////////////////////
+// mutators
+/////////////////////////////////////////////////////////
+
+// insert edge
+template <class T>
+void Graph<T>::insert( const T &u, const T &v )
+{
+	adjacency_list[u].push_back(v);
+}
+
+
+
+/////////////////////////////////////////////////////////
+// predicates
+/////////////////////////////////////////////////////////
+
+template <class T>
+bool Graph<T>::is_vertex( const T &u ) const
+{
+	return (adjacency_list.find(u) != end());
+}
+
+template <class T>
+bool Graph<T>::is_edge( const T &u, const T &v ) const
+{
+	vertex_iterator i = adjacency_list.find(u);
+	if (i == end()) {
+		return false;
+	}
+	assert( i->first == u );
+
+	typedef typename std::vector<T> NeighborList;
+	typedef typename NeighborList::const_iterator neighbor_iterator;
+
+	NeighborList neighbors = i->second;
+	neighbor_iterator j = find( neighbors.begin(), neighbors.end(), v );
+	return (j != neighbors.end()) ? true : false;
+}
+
+
+////////////////////////////////////////////////////////////
+// Breadth First Search 
+////////////////////////////////////////////////////////////
+#define INFINITY	-1
+enum COLOR {WHITE, GRAY, BLACK};
+
+template <class T>
+struct BFS_Vertex {
+	COLOR color;
+	int distance;
+	T previous;
+};
+
+
+template <class T>
+Graph<T> Graph<T>::BFS( const T & start_vertex )
+{
+	map<T, BFS_Vertex<T> > BFS_Tree;
+	Graph<T> outputTree;
+	queue<T> BFS_Queue;
+
+	// FILL IN
+/*
+	// get vertex list 
+	vector<T> allVertices = vertices();
+
+	BFS_Vertex<T> s;
+	BFS_Vertex<T> u;
+
+	// iterate over the vertex list to initialize the BFS_Tree
+	for ( int i = 0; i < allVertices.size(); i++ ){
+		// set the start vertex to gray, 0 and null
+		if (allVertices.at(i) == start_vertex){
+			s.color = GRAY;
+			s.distance = 0;
+			s.previous = NULL;
+			BFS_Tree.insert( pair< T,BFS_Vertex<T> >(allVertices.at(i),s));
+		// Set anything else to white, infinity and null
+		} else {
+			u.color = WHITE;
+			u.distance = INFINITY;
+			u.previous = NULL;
+			BFS_Tree.insert( pair< T,BFS_Vertex<T> >(allVertices.at(i),u));
+		}
+	}
+
+	// enqueue s
+	BFS_Queue.push(s);
+	
+	// while the queue is not empty
+	while ( !BFS_Queue.empty() ){
+		// get the next element in the queue and get its attributes from BFS_Tree, label this u
+		T keyVertex = BFS_Queue.front();
+		BFS_Vertex<T> u = BFS_Tree.find(keyVertex);
+
+		// find the adjacencies of the current element
+		vector<T> adjacencies = adjacency_list.find(keyVertex);
+
+		// iterate through the adjacencies of the current element
+		for ( int i = 0; i < adjacencies.size(); i ++){
+			
+			// get the current element in the adjacency list and get its attributes, label this v
+			T adjacentVertex = adjacencies.at(i); 
+			BFS_Vertex<T> v = BFS_Tree.find(adjacentVertex);
+
+			// if v hasn't been discovered, turn it grey, increment its distance, point to u and push it onto the queue
+			if ( v.color == WHITE ){
+				v.color = GRAY;
+				v.distance = u.d + 1;
+				v.previous = u;
+				BFS_Queue.push(v);
+			}
+		}
+
+		// label u black
+		u.color = BLACK;
+
+	}
+*/
+	// what is this supposed to return?
+	return outputTree;
+}
+
+
+
+
+////////////////////////////////////////////////////////////
+// Depth First Search 
+////////////////////////////////////////////////////////////
+template <class T>
+struct DFS_Vertex {
+	COLOR color;
+	int discover_time, finish_time;
+	T previous;
+};
+
+
+template <class T>
+Graph<T> Graph<T>::DFS()
+{
+	map<T, DFS_Vertex<T> > DFS_Tree;
+	Graph<T> outputTree;
+	stack<T> DFS_Stack;
+
+	// FILL IN
+/*
+	// get vertex list 
+	vector<T> allVertices = vertices();
+
+	// iterate over the vertex list to initialize the DFS_Tree
+	for ( int i = 0; i < allVertices.size(); i++ ){
+		// Set everything to white and null
+		BFS_Vertex<T> u;
+		u.color = WHITE;
+		u.previous = NULL;
+		DFS_Tree.insert( pair< T,BFS_Vertex<T> >(allVertices.at(i),u));
+	}
+
+	// initialize time
+	int discoverTime = 0;
+
+	// iterate over the vertex list
+	for ( int i = 0; i < allVertices.size(); i++ ){
+
+		// get the starting vertex
+		T startVertex = allVertices.at(i);
+		DFS_Vertex<T> s = DFS_Tree.find(startVertex);
+
+		// indicates the vertex has not yet been visited
+		if ( s.color == WHITE ){
+
+			// invcrement discover time 
+			discoverTime++;
+
+			// push the start vertex onto the stack
+			DFS_Stack.push(startVertex);
+
+			// change vertex color and time
+			s.color = GRAY;
+			s.discover_time = discoverTime;
+
+			while ( !DFS_Stack.empty() ){
+
+				// access the next element on the stack and get its attributes (dont erase from stack)
+				T keyVertex = DFS_Stack.peek();
+				DFS_Vertex<T> u = DFS_Tree.find(keyVertex);
+
+				// get its adjacencies 
+				vector<T> adjacencies = adjacency_list.find(keyVertex);
+
+				// indicates if the vertex has any previously undiscovered adjacencies
+				bool verticesLeft = false;
+
+				// iterate through the adjacencies of the current element
+				for ( int i = 0; i < adjacencies.size(); i ++){
+					
+					// get the current element in the adjacency list and get its attributes, label this v
+					T adjacentVertex = adjacencies.at(i); 
+					DFS_Vertex<T> v = DFS_Tree.find(adjacentVertex);
+
+					// if v hasn't been discovered, turn it grey
+					if ( v.color == WHITE ){
+
+						// increment discover time
+						discoverTime++;
+
+						// turn the newly discovered vertex grey and mark the time
+						v.color = GRAY;
+						v.discover_time = discoverTime;
+						v.previous = u;
+						DFS_Stack.push(adjacentVertex);
+
+						// bcause if was hit, vertex had previously undiscovered adjacencies
+						verticesLeft = true;
+					}
+				}
+
+				// if vertex had no previously undiscovered adjacencies
+				if ( !verticesLeft ){
+
+					// increment discover time
+					discoverTime++;
+
+					// label vertex as done
+					u.color = BLACK;
+					u.finish_time = discoverTime;
+
+					// remove from stack
+					DFS_Stack.pop();
+				}
+			}
+		}
+	}
+*/
+	// what is this supposed to return?
+	return outputTree;
+	
+}
+
+
