@@ -27,15 +27,16 @@ int main( int argc, char *argv[] )
 	in >> my_graph;
 	in.close();
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	// show input graph
 	cerr << "Input graph:" << endl;
 	cerr << my_graph;
-#endif
+//#endif
 
 	// run BFS
 	int start_vertex = 0;
-	Graph<int> my_bfs_tree( my_graph.BFS(start_vertex) );
+	Graph<int> my_bfs_tree = my_graph.BFS( 1 );
+
 
 	// write out graph
 	ofstream out;
@@ -43,11 +44,11 @@ int main( int argc, char *argv[] )
 	out << my_bfs_tree << endl;
 	out.close();
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	// show output graph
 	cerr << "Output BFS tree:" << endl;
 	cerr << my_bfs_tree;
-#endif
+//#endif
 }
 
 
