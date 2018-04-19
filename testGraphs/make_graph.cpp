@@ -16,11 +16,13 @@ using namespace std;
  */
 int main( int argc, char *argv[] )
 {
-	assert( argc > 2 );
+	assert( argc > 1 );
 	
 	// create random graph of a given size
 	int size;
 	size = atoi( argv[1] );
+
+    cerr << size << endl;
 
 	vector<int> my_vertices;
 	for (int i=0; i<size; i++) {

@@ -35,7 +35,7 @@ Graph<T>::Graph( const vector<T> &vertex_set, bool is_directed )
 		vector<T> adjacentVertices;
 
 		// generate random value within the input vector
-		int randomVal = rand() % size + 1;
+		int randomVal = rand() % size;
 		
 		// This random value will be connected to the key value
 		T valueConnected = vertex_set.at(randomVal);
