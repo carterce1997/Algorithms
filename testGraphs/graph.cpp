@@ -31,20 +31,39 @@ Graph<T>::Graph( const vector<T> &vertex_set, bool is_directed )
 	for ( typename vector<T>::const_iterator itKey = vertex_set.begin(); itKey != vertex_set.end(); ++itKey ){
 
 		// get key value and create new vector
-		T valueKey = *itKey;
+		T keyVertex = *itKey;
 		vector<T> adjacentVertices;
 
-		// generate random value within the input vector
-		int randomVal = rand() % size;
-		
-		// This random value will be connected to the key value
-		T valueConnected = vertex_set.at(randomVal);
-		adjacentVertices.push_back(valueConnected);
+		// generate random value that is less than the number of vertices
+		int randomVal = (rand() % (size-1) ) + 1;
 
-		// Add to the adjacency list
-		adjacency_list.insert(pair< T,vector<T> >(valueKey,adjacentVertices));
-	}
-	
+		// create randomVal number of connections
+		while ( randomVal > 0 ) {
+
+			// create another random variable to connect to the keyVertex
+			int randomVal2 = (rand()^2) % size;
+			T newConnection = vertex_set.at( randomVal2 );
+
+			// keep track if a connection already exists
+			bool alreadyUsed = false;
+			if ( !adjacentVertices.empty() )
+				for ( unsigned j = 0; j < adjacentVertices.size(); j++ )
+					if ( newConnection == adjacentVertices.at( j ) )
+						alreadyUsed = true;
+
+			// if the value hasn't already been used
+			if ( !alreadyUsed ){
+				// This random value will be connected to the key value
+				adjacentVertices.push_back( newConnection );
+
+				randomVal--;
+			}
+		}
+
+		// Add all new connections the adjacency list
+		adjacency_list.insert(pair< T,vector<T> >( keyVertex,adjacentVertices ));
+		adjacentVertices.clear();		
+	}	
 }
 
 /////////////////////////////////////////////////////////
@@ -262,9 +281,8 @@ Graph<T> Graph<T>::DFS()
 
 				// access the next element on the stack and get its attributes (dont erase from stack)
 				T keyVertex = DFS_Stack.top();
-				DFS_Vertex<T> u = DFS_Tree.find( keyVertex )->second;
 
-				// get its adjacencies 
+				DFS_Vertex<T> u = DFS_Tree.find( keyVertex )->second;
 				vector<T> adjacencies = adjacency_list.find( keyVertex )->second;
 
 				// indicates if the vertex has any previously undiscovered adjacencies
