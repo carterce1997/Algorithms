@@ -293,9 +293,6 @@ Graph<T> Graph<T>::DFS()
 					T adjacentVertex = adjacencies.at(i); 
 					DFS_Vertex<T> v = DFS_Tree.find( adjacentVertex )->second;
 							
-					// adds the edge (u, v) to the BFS tree 
-					outputTree.insert( keyVertex, adjacentVertex );   
-
 					// if v hasn't been discovered, turn it grey
 					if ( v.color == WHITE ){
 
@@ -309,6 +306,9 @@ Graph<T> Graph<T>::DFS()
 						DFS_Stack.push( adjacentVertex );
 
 						DFS_Tree.at( adjacentVertex ) = v;
+					
+                        // adds the edge (u, v) to the BFS tree 
+                        if (adjacentVertex != startVertex) outputTree.insert( keyVertex, adjacentVertex );   
 
 						// bcause if was hit, vertex had previously undiscovered adjacencies
 						verticesLeft = true;
@@ -332,7 +332,6 @@ Graph<T> Graph<T>::DFS()
 		}
 	}
 
-	// what is this supposed to return?
 	return outputTree;
 	
 }
