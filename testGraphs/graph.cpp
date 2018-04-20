@@ -210,10 +210,8 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
                 outputTree.insert( keyVertex, adjacentVertex );            
 			}
 		}
-
 		// label u black
 		u.color = BLACK;
-
 	}
 	
     return outputTree;

@@ -87,6 +87,7 @@ public:
 			for(typename vector<T>::const_iterator itVec = itKey->second.begin(); itVec != itKey->second.end(); ++itVec){
 				out << '\t' << itKey->first << " -> " << *itVec << ';' << '\n';
 			}
+			out << '\n';
 		}
 
 		// close brackets
@@ -98,6 +99,7 @@ public:
 	friend istream & operator>>(istream &in, Graph<T> &graph) {
 		// FILL IN
 
+		// will read in graph line by line
 		char line[256];
 		in.getline( line, 256 );
 
@@ -110,12 +112,13 @@ public:
 			// first line with be dirgraph
 		} // input should be one of these
 
+		// read the body
 		while ( !in.eof() ){
 			in.getline( line, 256 );
 
-			// if line contains a tab, then it's declaring a new edge
+			// if line contains a digit or a tab it's declaring a new edge
 			if ( isdigit(line[0]) ){
-				// the 2nd and 7th elements will be digits
+				// the 1st and 6th elements will be digits
 				T value1 = line[0] - '0';
 				T value2 = line[5] - '0';
 
