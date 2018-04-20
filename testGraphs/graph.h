@@ -85,7 +85,7 @@ public:
 		// iterate though adjacency_list and print each value pair
 		 for (typename AdjacencyList::const_iterator itKey = graph.begin(); itKey != graph.end(); ++itKey){
 			for(typename vector<T>::const_iterator itVec = itKey->second.begin(); itVec != itKey->second.end(); ++itVec){
-				out << itKey->first << " -> " << *itVec << '\n';
+				out << '\t' << itKey->first << " -> " << *itVec << ';' << '\n';
 			}
 		}
 
@@ -122,7 +122,14 @@ public:
 
 				// insert the edge
 				graph.insert( value1, value2 );
-			} 
+			} else if ( line[0] == '\t' ){
+				// the 2nd and 7th elements will be digits
+				T value1 = line[1] - '0';
+				T value2 = line[6] - '0';
+
+				// insert the edge
+				graph.insert( value1, value2 );
+			}
 		}
 		return in;
 	}
