@@ -22,19 +22,21 @@ int main( int argc, char *argv[] )
 
 	// read in graph 
 	Graph<int> my_graph;
+
 	ifstream in;
 	in.open( argv[1] );
 	in >> my_graph;
 	in.close();
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	// show input graph
 	cerr << "Input graph:" << endl;
 	cerr << my_graph;
-#endif
+//#endif
 
 	// run DFS
 	Graph<int> my_dfs_tree( my_graph.DFS() );
+	my_dfs_tree.setDirected( my_graph.is_directed() );
 
 	// write out graph
 	ofstream out;
@@ -42,11 +44,11 @@ int main( int argc, char *argv[] )
 	out << my_dfs_tree << endl;
 	out.close();
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	// show output graph
 	cerr << "Output DFS tree:" << endl;
 	cerr << my_dfs_tree;
-#endif
+//#endif 
 }
 
 

@@ -22,6 +22,7 @@ int main( int argc, char *argv[] )
 
 	// read in graph 
 	Graph<int> my_graph;
+
 	ifstream in;
 	in.open( argv[1] );
 	in >> my_graph;
@@ -36,7 +37,7 @@ int main( int argc, char *argv[] )
 	// run BFS
 	int start_vertex = 0;
 	Graph<int> my_bfs_tree = my_graph.BFS( start_vertex );
-
+	my_bfs_tree.setDirected( my_graph.is_directed() );
 
 	// write out graph
 	ofstream out;

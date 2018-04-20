@@ -135,7 +135,7 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 	BFS_Vertex<T> u;
 
 	// iterate over the vertex list to initialize the BFS_Tree
-	for ( int i = 0; i < allVertices.size(); i++ ){
+	for ( unsigned i = 0; i < allVertices.size(); i++ ){
 		// set the start vertex to gray, 0 and null
 		if (allVertices.at(i) == start_vertex){
 			s.color = GRAY;
@@ -172,7 +172,7 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 		vector<T> adjacencies = adjacency_list.find( keyVertex )->second;
 
     	// iterate through the adjacencies of the current element
-		for ( int i = 0; i < adjacencies.size(); i ++){
+		for ( unsigned i = 0; i < adjacencies.size(); i ++){
 			
 			// get the current element in the adjacency list and get its attributes, label this v
 			T adjacentVertex = adjacencies.at(i); 
@@ -221,28 +221,28 @@ Graph<T> Graph<T>::DFS()
 	stack<T> DFS_Stack;
 
 	// FILL IN
-/*
+
 	// get vertex list 
 	vector<T> allVertices = vertices();
 
 	// iterate over the vertex list to initialize the DFS_Tree
-	for ( int i = 0; i < allVertices.size(); i++ ){
+	for ( unsigned i = 0; i < allVertices.size(); i++ ){
 		// Set everything to white and null
-		BFS_Vertex<T> u;
+		DFS_Vertex<T> u;
 		u.color = WHITE;
 		u.previous = NULL;
-		DFS_Tree.insert( pair< T,BFS_Vertex<T> >(allVertices.at(i),u));
+		DFS_Tree.insert( pair< T,DFS_Vertex<T> >(allVertices.at(i),u));
 	}
 
 	// initialize time
 	int discoverTime = 0;
 
 	// iterate over the vertex list
-	for ( int i = 0; i < allVertices.size(); i++ ){
+	for ( unsigned i = 0; i < allVertices.size(); i++ ){
 
 		// get the starting vertex
 		T startVertex = allVertices.at(i);
-		DFS_Vertex<T> s = DFS_Tree.find(startVertex);
+		DFS_Vertex<T> s = DFS_Tree.find( startVertex )->second;
 
 		// indicates the vertex has not yet been visited
 		if ( s.color == WHITE ){
@@ -260,21 +260,24 @@ Graph<T> Graph<T>::DFS()
 			while ( !DFS_Stack.empty() ){
 
 				// access the next element on the stack and get its attributes (dont erase from stack)
-				T keyVertex = DFS_Stack.peek();
-				DFS_Vertex<T> u = DFS_Tree.find(keyVertex);
+				T keyVertex = DFS_Stack.top();
+				DFS_Vertex<T> u = DFS_Tree.find( keyVertex )->second;
 
 				// get its adjacencies 
-				vector<T> adjacencies = adjacency_list.find(keyVertex);
+				vector<T> adjacencies = adjacency_list.find( keyVertex )->second;
 
 				// indicates if the vertex has any previously undiscovered adjacencies
 				bool verticesLeft = false;
 
 				// iterate through the adjacencies of the current element
-				for ( int i = 0; i < adjacencies.size(); i ++){
+				for ( unsigned i = 0; i < adjacencies.size(); i ++){
 					
 					// get the current element in the adjacency list and get its attributes, label this v
 					T adjacentVertex = adjacencies.at(i); 
-					DFS_Vertex<T> v = DFS_Tree.find(adjacentVertex);
+					DFS_Vertex<T> v = DFS_Tree.find( adjacentVertex )->second;
+							
+					// adds the edge (u, v) to the BFS tree 
+					outputTree.insert( keyVertex, adjacentVertex );   
 
 					// if v hasn't been discovered, turn it grey
 					if ( v.color == WHITE ){
@@ -285,8 +288,10 @@ Graph<T> Graph<T>::DFS()
 						// turn the newly discovered vertex grey and mark the time
 						v.color = GRAY;
 						v.discover_time = discoverTime;
-						v.previous = u;
-						DFS_Stack.push(adjacentVertex);
+						v.previous = keyVertex;
+						DFS_Stack.push( adjacentVertex );
+
+						DFS_Tree.at( adjacentVertex ) = v;
 
 						// bcause if was hit, vertex had previously undiscovered adjacencies
 						verticesLeft = true;
@@ -309,7 +314,7 @@ Graph<T> Graph<T>::DFS()
 			}
 		}
 	}
-*/
+
 	// what is this supposed to return?
 	return outputTree;
 	
