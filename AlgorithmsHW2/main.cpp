@@ -39,7 +39,7 @@ int main( int argc, char *argv[] )
 	cerr << "Output file = " << argv[2] << endl <<  endl;
 	outfile.open( argv[2] );
 
-    outfile << "Size,NaiveCost,RecursiveCost,IterativeCost" << endl;
+    outfile << "size,bcost,icost,scost,mcost,qcost,qcostm" << endl;
 
 	for (int curr_size = 2; curr_size < size; curr_size++) {
         
@@ -102,7 +102,8 @@ int main( int argc, char *argv[] )
         cerr << "Median Pivot Quick Sort Sorted Array: ";
         show(qbufferm, curr_size);
         cerr << "Quick Sort Cost = " << qcostm << endl;
-			
+	    
+        outfile << curr_size << "," << bcost << "," << icost << "," << scost << "," << mcost << "," << qcost << "," << qcostm << endl;
         cerr << endl;
 	}
 

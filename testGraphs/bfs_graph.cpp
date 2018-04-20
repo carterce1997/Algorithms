@@ -37,6 +37,7 @@ int main( int argc, char *argv[] )
 	int start_vertex = 0;
 	Graph<int> my_bfs_tree = my_graph.BFS( start_vertex );
 
+
 	// write out graph
 	ofstream out;
 	out.open( argv[2] );
