@@ -179,11 +179,11 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 			BFS_Vertex<T> v = BFS_Tree.find( adjacentVertex )->second;
     
             // adds the edge (u, v) to the BFS tree 
-            outputTree.insert( keyVertex, adjacentVertex );            
 
 			// if v hasn't been discovered, turn it grey, increment its distance, point to u and push it onto the queue
 			if ( v.color == WHITE ){
 				v.color = GRAY;
+                outputTree.insert( keyVertex, adjacentVertex );            
 				v.distance = u.distance + 1;
 				v.previous = keyVertex;
 				BFS_Queue.push( adjacentVertex );
