@@ -127,7 +127,7 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 	queue<T> BFS_Queue;
 
 	// FILL IN
-/*
+
 	// get vertex list 
 	vector<T> allVertices = vertices();
 
@@ -141,41 +141,53 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 			s.color = GRAY;
 			s.distance = 0;
 			s.previous = NULL;
-			BFS_Tree.insert( pair< T,BFS_Vertex<T> >(allVertices.at(i),s));
+			BFS_Tree.insert( pair< T, BFS_Vertex<T> >(allVertices.at(i), s) );
 		// Set anything else to white, infinity and null
 		} else {
 			u.color = WHITE;
 			u.distance = INFINITY;
 			u.previous = NULL;
-			BFS_Tree.insert( pair< T,BFS_Vertex<T> >(allVertices.at(i),u));
+			BFS_Tree.insert( pair< T, BFS_Vertex<T> >(allVertices.at(i), u) );
 		}
 	}
 
 	// enqueue s
-	BFS_Queue.push(s);
-	
+	BFS_Queue.push( start_vertex );
+
 	// while the queue is not empty
-	while ( !BFS_Queue.empty() ){
+    bool isempty = false;
+	
+	while ( !isempty ){
 		// get the next element in the queue and get its attributes from BFS_Tree, label this u
+        isempty = BFS_Queue.empty();
+        if ( isempty ) break;
+
+        // dequeue
 		T keyVertex = BFS_Queue.front();
-		BFS_Vertex<T> u = BFS_Tree.find(keyVertex);
+        BFS_Queue.pop();
+
+        BFS_Vertex<T> u = BFS_Tree.find( keyVertex )->second;
 
 		// find the adjacencies of the current element
-		vector<T> adjacencies = adjacency_list.find(keyVertex);
+		vector<T> adjacencies = adjacency_list.find( keyVertex )->second;
 
-		// iterate through the adjacencies of the current element
+    	// iterate through the adjacencies of the current element
 		for ( int i = 0; i < adjacencies.size(); i ++){
 			
 			// get the current element in the adjacency list and get its attributes, label this v
 			T adjacentVertex = adjacencies.at(i); 
-			BFS_Vertex<T> v = BFS_Tree.find(adjacentVertex);
+			BFS_Vertex<T> v = BFS_Tree.find( adjacentVertex )->second;
+    
+            // adds the edge (u, v) to the BFS tree 
+            outputTree.insert( keyVertex, adjacentVertex );            
 
 			// if v hasn't been discovered, turn it grey, increment its distance, point to u and push it onto the queue
 			if ( v.color == WHITE ){
 				v.color = GRAY;
-				v.distance = u.d + 1;
-				v.previous = u;
-				BFS_Queue.push(v);
+				v.distance = u.distance + 1;
+				v.previous = keyVertex;
+				BFS_Queue.push( adjacentVertex );
+				BFS_Tree.at( adjacentVertex ) = v;
 			}
 		}
 
@@ -183,9 +195,8 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 		u.color = BLACK;
 
 	}
-*/
-	// what is this supposed to return?
-	return outputTree;
+	
+    return outputTree;
 }
 
 

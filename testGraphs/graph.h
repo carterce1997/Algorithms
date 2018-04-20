@@ -117,8 +117,8 @@ public:
 			if ( isdigit(line[0]) ){
 
 				// the 2nd and 7th elements will be digits
-				T value1 = (T)line[0];
-				T value2 = (T)line[5];
+				T value1 = line[0] - '0';
+				T value2 = line[5] - '0';
 
 				// insert the edge
 				graph.insert( value1, value2 );

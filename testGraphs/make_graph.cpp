@@ -35,12 +35,12 @@ int main( int argc, char *argv[] )
 	cerr << "Random graph of size " << size << ":" << endl;
 	cerr << my_random_graph;
 //#endif
-/*
+
 	// write graph out to file
 	ofstream out;
 	out.open( argv[2] );
 	out << my_random_graph;
 	out.close();
-*/
+
 }
 
