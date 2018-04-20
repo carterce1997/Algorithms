@@ -17,7 +17,7 @@ private:
 
 public:
 	// constructors
-	Graph():size(0), directed(false) { adjacency_list.clear(); }
+	Graph():size(0), directed(true) { adjacency_list.clear(); }
 		// for empty graph
 	Graph( const vector<T> &vertex_set, bool is_directed );
 		// for random graph
@@ -76,10 +76,10 @@ public:
 		// FILL IN
 
 		// print header and brackets
-		if ( graph.is_directed() ){
-			out << "digraph {" << '\n';
-		} else {
+		if ( !graph.is_directed() ){
 			out << "undigraph {" << '\n';
+		} else {
+			out << "digraph {" << '\n';
 		}
 
 		// iterate though adjacency_list and print each value pair
@@ -115,7 +115,6 @@ public:
 
 			// if line contains a tab, then it's declaring a new edge
 			if ( isdigit(line[0]) ){
-
 				// the 2nd and 7th elements will be digits
 				T value1 = line[0] - '0';
 				T value2 = line[5] - '0';
