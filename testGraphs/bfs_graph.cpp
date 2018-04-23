@@ -27,6 +27,7 @@ int main( int argc, char *argv[] )
 	in >> my_graph;
 	in.close();
 
+#define DEBUG
 #ifdef DEBUG
 	// show input graph
 	cerr << "Input graph:" << endl;
@@ -35,6 +36,7 @@ int main( int argc, char *argv[] )
 
 	// run BFS
 	int start_vertex = 0;
+
 	Graph<int> my_bfs_tree( my_graph.BFS(start_vertex) );
 
 	// write out graph

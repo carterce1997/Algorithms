@@ -49,7 +49,7 @@ public:
 
 
 	// iterator for vertices
-	//  reuses iterator for std::map
+	// reuses iterator for std::map
 	typedef typename AdjacencyList::const_iterator vertex_iterator;
 	vertex_iterator begin() const { return adjacency_list.begin(); }
 	vertex_iterator end() const { return adjacency_list.end(); }
@@ -83,7 +83,7 @@ public:
 		}
 
 		// iterate though adjacency_list and print each value pair
-		 for (typename AdjacencyList::const_iterator itKey = graph.begin(); itKey != graph.end(); ++itKey){
+		for (typename AdjacencyList::const_iterator itKey = graph.begin(); itKey != graph.end(); ++itKey){
 			for(typename vector<T>::const_iterator itVec = itKey->second.begin(); itVec != itKey->second.end(); ++itVec){
 				out << '\t' << itKey->first << " -> " << *itVec << ';' << '\n';
 			}
@@ -135,7 +135,6 @@ public:
 				graph.insert( value1, value2 );
 			}
 		}
-		std::cout<<"fsdafdsaasfd"<<endl;
 		return in;
 	}
 

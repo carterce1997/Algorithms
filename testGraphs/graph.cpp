@@ -5,10 +5,10 @@
 #include <map>
 #include <queue>
 #include <stack>
+#include <algorithm>
 #include <assert.h>
 #include <time.h>
 using namespace std;
-
 
 /////////////////////////////////////////////////////////
 // constructors
@@ -73,15 +73,19 @@ Graph<T>::Graph( const vector<T> &vertex_set, bool is_directed )
 template <class T>
 vector<T> Graph<T>::vertices()
 {
+	// must ensure that ALL vertices are returned. Some vertices are not keys in adjacency list
 	vector<T> vertex_set;
 
-	for (vertex_iterator i = begin(); i != end(); i++) {
-		vertex_set.push_back(i->first);
+	for ( vertex_iterator i = begin(); i != end(); i++ ) {
+		if ( find(vertex_set.begin(), vertex_set.end(), i->first ) ==  vertex_set.end() )
+			vertex_set.push_back( i->first );
+		for ( typename vector<T>::const_iterator itVec = i->second.begin(); itVec != i->second.end(); ++itVec ){
+			if ( find(vertex_set.begin(), vertex_set.end(), *itVec ) ==  vertex_set.end() )
+				vertex_set.push_back( *itVec );	
+		}
 	}
 	return vertex_set;
-}
-
-
+}	
 
 /////////////////////////////////////////////////////////
 // mutators
@@ -93,8 +97,6 @@ void Graph<T>::insert( const T &u, const T &v )
 {
 	adjacency_list[u].push_back(v);
 }
-
-
 
 /////////////////////////////////////////////////////////
 // predicates
@@ -123,7 +125,6 @@ bool Graph<T>::is_edge( const T &u, const T &v ) const
 	return (j != neighbors.end()) ? true : false;
 }
 
-
 ////////////////////////////////////////////////////////////
 // Breadth First Search 
 ////////////////////////////////////////////////////////////
@@ -136,7 +137,6 @@ struct BFS_Vertex {
 	int distance;
 	T previous;
 };
-
 
 template <class T>
 Graph<T> Graph<T>::BFS( const T & start_vertex )
@@ -161,8 +161,8 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 			s.distance = 0;
 			s.previous = NULL;
 			BFS_Tree.insert( pair< T, BFS_Vertex<T> >(allVertices.at(i), s) );
-		// Set anything else to white, infinity and null
 		} else {
+			// Set anything else to white, infinity and null
 			u.color = WHITE;
 			u.distance = INFINITY;
 			u.previous = NULL;
@@ -176,38 +176,40 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 	// while the queue is not empty
     bool isempty = false;
 	
-	while ( !isempty ){
+	while ( !BFS_Queue.empty() ){
 		// get the next element in the queue and get its attributes from BFS_Tree, label this u
-        isempty = BFS_Queue.empty();
-        if ( isempty ) break;
 
-        // dequeue
+      // dequeue
 		T keyVertex = BFS_Queue.front();
-        BFS_Queue.pop();
+		BFS_Queue.pop();
+		
+		// get BFS data structure for this key	
+    	BFS_Vertex<T> u = BFS_Tree.find( keyVertex )->second;
 
-        BFS_Vertex<T> u = BFS_Tree.find( keyVertex )->second;
+		if( adjacency_list.find( keyVertex ) != adjacency_list.end() ){
 
 		// find the adjacencies of the current element
 		vector<T> adjacencies = adjacency_list.find( keyVertex )->second;
 
-    	// iterate through the adjacencies of the current element
-		for ( unsigned i = 0; i < adjacencies.size(); i ++){
-			
-			// get the current element in the adjacency list and get its attributes, label this v
-			T adjacentVertex = adjacencies.at(i); 
-			BFS_Vertex<T> v = BFS_Tree.find( adjacentVertex )->second;
-    
-			// if v hasn't been discovered, turn it grey, increment its distance, point to u and push it onto the queue
-			if ( v.color == WHITE ){
-                v.color = GRAY;
-				v.distance = u.distance + 1;
-				v.previous = keyVertex;
+	  		// iterate through the adjacencies of the current element
+			for ( unsigned i = 0; i < adjacencies.size(); i++ ){
 				
-                BFS_Queue.push( adjacentVertex );
-				BFS_Tree.at( adjacentVertex ) = v;
+				// find the current element in the adjacency list and get its attributes, label this v
+				T adjacentVertex = adjacencies.at(i); 
+				BFS_Vertex<T> v = BFS_Tree.find( adjacentVertex )->second;
+ 	   
+				// if v hasn't been discovered, turn it grey, increment its distance, point to u and push it onto the queue
+				if ( v.color == WHITE ){
+   		     	v.color = GRAY;
+					v.distance = u.distance + 1;
+					v.previous = keyVertex;
+				
+	          	BFS_Queue.push( adjacentVertex );
+					BFS_Tree.at( adjacentVertex ) = v;
                 
-                // adds the edge (u, v) to the BFS tree 
-                outputTree.insert( keyVertex, adjacentVertex );            
+      	      // adds the edge (u, v) to the BFS tree 
+      	   	outputTree.insert( keyVertex, adjacentVertex );            
+				}
 			}
 		}
 		// label u black
@@ -216,9 +218,6 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 	
     return outputTree;
 }
-
-
-
 
 ////////////////////////////////////////////////////////////
 // Depth First Search 
@@ -229,7 +228,6 @@ struct DFS_Vertex {
 	int discover_time, finish_time;
 	T previous;
 };
-
 
 template <class T>
 Graph<T> Graph<T>::DFS()
@@ -277,7 +275,7 @@ Graph<T> Graph<T>::DFS()
 
 			while ( !DFS_Stack.empty() ){
 
-				// access the next element on the stack and get its attributes (dont erase from stack)
+				// access the next element on the stack and get its attributes (don't erase from stack)
 				T keyVertex = DFS_Stack.top();
 
 				DFS_Vertex<T> u = DFS_Tree.find( keyVertex )->second;
@@ -335,5 +333,3 @@ Graph<T> Graph<T>::DFS()
 	return outputTree;
 	
 }
-
-
