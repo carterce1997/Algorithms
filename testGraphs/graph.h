@@ -100,8 +100,8 @@ public:
 		// FILL IN
 
 		// will read in graph line by line
-		char line[256];
-		in.getline( line, 256 );
+		string line;
+		getline( in, line );
 
 		// header determines if the graph is directed or undirected
 		if ( line[0] == 'u'){
@@ -115,24 +115,21 @@ public:
 		}
 
 		// read the body
-		while ( !in.eof() ){
-			in.getline( line, 256 );
+		while ( getline( in, line ) ){
 
-			// if line contains a digit or a tab it's declaring a new edge
-			if ( isdigit(line[0]) ){
-				// the 1st and 6th elements will be digits
-				T value1 = line[0] - '0';
-				T value2 = line[5] - '0';
-
-				// insert the edge
+			stringstream sstream;
+			sstream.str( line );
+			
+			int value1;
+			int value2;
+						
+			sstream >> value1;
+			if ( sstream ) { 
+				for ( int i = 0; i < 3; ++i ) sstream.get();
+				sstream >> value2;
+				assert( sstream );
 				graph.insert( value1, value2 );
-			} else if ( line[0] == '\t' ){
-				// the 2nd and 7th elements will be digits
-				T value1 = line[1] - '0';
-				T value2 = line[6] - '0';
 
-				// insert the edge
-				graph.insert( value1, value2 );
 			}
 		}
 		return in;
@@ -144,9 +141,6 @@ public:
 
 };
 
-
 #include "graph.cpp"
 
 #endif
-
-
