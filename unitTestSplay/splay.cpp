@@ -30,6 +30,10 @@ Splay<T>* Splay<T>::zig( Splay<T>* pivot ) {
 	pivot->setRight(root);
 	root->setParent(pivot);
 
+    pivot->setType(root->getType());
+    root->setType(RIGHT);
+    if ( ((Splay<T>*)(root->getLeft())) != NULL) ((Splay<T>*)(root->getLeft()))->setType(LEFT);
+
 	//((Tree<T>*)pivot)->updateHeight();
 	return pivot;
 
@@ -93,10 +97,14 @@ Splay<T>* Splay<T>::zag( Splay<T>* pivot ) { // left rotation
 	// set up this's right child
 	root->setRight(pivot->getLeft());
 	if(pivot->getLeft() != NULL) pivot->getLeft()->setParent(root);
-
+    
 	// set pivot's left child
 	pivot->setLeft(root);
 	root->setParent(pivot);
+
+    pivot->setType(root->getType());
+    root->setType(LEFT);
+    if ( ((Splay<T>*)(root->getRight())) != NULL ) ((Splay<T>*)(root->getRight()))->setType(RIGHT);
 
 	//((Tree<T>*)pivot)->updateHeight();
 	return pivot;
@@ -178,13 +186,14 @@ Splay<T>* Splay<T>::splay( Tree<T>* t ) {
         // Case: input is right and parent is root
         ts->show();
         cerr << "zag" << endl;
-        zag(ts);
-        return (Splay<T>*)this;
+        ts = zag(ts);
+        ts->show();
+        return (Splay<T>*)ts;
     } else if (ts->getType() == LEFT && ((Splay<T>*)(ts->getParent()))->getType() == ROOT) {
         // Case: input is left and parent is root
         cerr << "zig" << endl;
-        zig(ts);
-        return (Splay<T>*)this;
+        ts = zig(ts);
+        return (Splay<T>*)ts;
     } else if (ts->getType() == RIGHT && ((Splay<T>*)(ts->getParent()))->getType() != RIGHT) {
         // Case: input is right and parent is left or root
         cerr << "zag zig" << endl;

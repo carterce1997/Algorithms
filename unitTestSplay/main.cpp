@@ -13,6 +13,10 @@ int main() {
     s->show();
     cerr << "--\n";
 
+    bool val = (s->getRight()) == NULL;
+
+    cerr << val << endl;
+
     s->insert(14);
     s->show();
     cerr << "--\n";
