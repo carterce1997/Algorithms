@@ -4,7 +4,7 @@ DFLAGS =
 INPUT_FILE = in_graph.txt
 BFS_FILE = out_bfs.txt
 DFS_FILE = out_dfs.txt
-GRAPH_SIZE = 5
+GRAPH_SIZE = 20
 SOURCE = make_graph.cpp bfs_graph.cpp dfs_graph.cpp
 EXECS = test_make_graph test_bfs test_dfs
 

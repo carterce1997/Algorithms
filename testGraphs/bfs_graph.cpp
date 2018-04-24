@@ -22,12 +22,12 @@ int main( int argc, char *argv[] )
 
 	// read in graph 
 	Graph<int> my_graph;
+
 	ifstream in;
 	in.open( argv[1] );
 	in >> my_graph;
 	in.close();
 
-#define DEBUG
 #ifdef DEBUG
 	// show input graph
 	cerr << "Input graph:" << endl;
