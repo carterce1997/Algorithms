@@ -82,11 +82,20 @@ public:
 			out << "digraph {" << '\n';
 		}
 
+		// print vertices with no attachments
+		for (typename AdjacencyList::const_iterator itKey = graph.begin(); itKey != graph.end(); ++itKey){
+			if ( *(itKey->second.begin()) == NULL ){
+				out << '\t' << itKey->first << ';' << '\n';
+				out << '\n';
+			}
+		}
+
 		// iterate though adjacency_list and print each value pair
 		for (typename AdjacencyList::const_iterator itKey = graph.begin(); itKey != graph.end(); ++itKey){
-			for(typename vector<T>::const_iterator itVec = itKey->second.begin(); itVec != itKey->second.end(); ++itVec){
-				out << '\t' << itKey->first << " -> " << *itVec << ';' << '\n';
-			}
+			if ( *(itKey->second.begin()) != NULL )
+				for(typename vector<T>::const_iterator itVec = itKey->second.begin(); itVec != itKey->second.end(); ++itVec)
+					out << '\t' << itKey->first << " -> " << *itVec << ';' << '\n';
+				
 			out << '\n';
 		}
 
@@ -120,16 +129,20 @@ public:
 			stringstream sstream;
 			sstream.str( line );
 			
-			int value1;
-			int value2;
+			T value1;
+			T value2;
 						
 			sstream >> value1;
 			if ( sstream ) { 
-				for ( int i = 0; i < 3; ++i ) sstream.get();
-				sstream >> value2;
-				assert( sstream );
-				graph.insert( value1, value2 );
 
+				if ( sstream.peek() != ';' ) {
+					for ( int i = 0; i < 3; ++i ) sstream.get();
+					sstream >> value2;
+					assert( sstream );
+					graph.insert( value1, value2 );
+				} else {
+					graph.insert( value1, NULL );
+				}
 			}
 		}
 		return in;

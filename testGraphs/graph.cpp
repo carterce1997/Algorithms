@@ -36,7 +36,7 @@ Graph<T>::Graph( const vector<T> &vertex_set, bool is_directed )
 
 		// generate random value that is less than the number of vertices
 		int randomVal = (rand() % (size-1) ) + 1;
-
+		//randomVal = 1;
 		// create randomVal number of connections
 		while ( randomVal > 0 ) {
 
@@ -81,7 +81,7 @@ vector<T> Graph<T>::vertices()
 			vertex_set.push_back( i->first );
 		for ( typename vector<T>::const_iterator itVec = i->second.begin(); itVec != i->second.end(); ++itVec ){
 			if ( find(vertex_set.begin(), vertex_set.end(), *itVec ) ==  vertex_set.end() )
-				vertex_set.push_back( *itVec );	
+				if ( is_vertex( *itVec ) ) vertex_set.push_back( *itVec );	
 		}
 	}
 	return vertex_set;
@@ -207,8 +207,8 @@ Graph<T> Graph<T>::BFS( const T & start_vertex )
 	          	BFS_Queue.push( adjacentVertex );
 					BFS_Tree.at( adjacentVertex ) = v;
                 
-      	      // adds the edge (u, v) to the BFS tree 
-      	   	outputTree.insert( keyVertex, adjacentVertex );            
+      	      	// adds the edge (u, v) to the BFS tree 
+      	   		outputTree.insert( keyVertex, adjacentVertex );            
 				}
 			}
 		}
@@ -266,6 +266,8 @@ Graph<T> Graph<T>::DFS()
 			// invcrement discover time 
 			discoverTime++;
 
+			//cerr << startVertex << " ";
+
 			// push the start vertex onto the stack
 			DFS_Stack.push(startVertex);
 
@@ -293,6 +295,7 @@ Graph<T> Graph<T>::DFS()
 							
 					// if v hasn't been discovered, turn it grey
 					if ( v.color == WHITE ){
+						//cerr << adjacentVertex << " ";
 
 						// increment discover time
 						discoverTime++;
@@ -323,10 +326,15 @@ Graph<T> Graph<T>::DFS()
 					u.color = BLACK;
 					u.finish_time = discoverTime;
 
+					// if has not yet been added, add as a solitary vertex
+					if ( !outputTree.is_vertex(keyVertex) ) 
+						outputTree.insert( keyVertex, NULL );
+
 					// remove from stack
 					DFS_Stack.pop();
 				}
 			}
+			//cerr << endl;
 		}
 	}
 
