@@ -55,7 +55,7 @@ Splay<T>* Splay<T>::zag( Splay<T>* root ) { // left rotation
 			pivot->getParent()->setRight(pivot);	
 	}
 
-	// set up this's right child
+	// set up root's right child
 	root->setRight(pivot->getLeft());
 	if(pivot->getLeft() != NULL){
         pivot->getLeft()->setParent(root);
@@ -74,22 +74,22 @@ Splay<T>* Splay<T>::zag( Splay<T>* root ) { // left rotation
 
 template <class T>
 Splay<T>* Splay<T>::zigzig( Splay<T>* nodeToSplay ) { // right right rotate
-    return Splay<T>::zig( (Splay<T> *) zig(nodeToSplay)->getParent() ); // rotate node right
+    return Splay<T>::zig( zig( (Splay<T>*)nodeToSplay->getParent()->getParent() ) ); // rotate node right
 }
 
 template <class T>
 Splay<T>* Splay<T>::zigzag( Splay<T>* nodeToSplay ) { // right left rotate
-    return Splay<T>::zig( (Splay<T> *) zag(nodeToSplay)->getParent() ); // rotate node right
+    return Splay<T>::zig( (Splay<T> *) zag( (Splay<T>*) nodeToSplay->getParent() )->getParent() ); // rotate node right
 }
 
 template <class T>
 Splay<T>* Splay<T>::zagzig( Splay<T>* nodeToSplay ) { // left right rotate
-    return Splay<T>::zag( (Splay<T> *) zig(nodeToSplay)->getParent() ); // rotate node right
+    return Splay<T>::zag( (Splay<T> *) zig( (Splay<T>*) nodeToSplay->getParent() )->getParent() ); // rotate node right
 }
 
 template <class T>
 Splay<T>* Splay<T>::zagzag( Splay<T>* nodeToSplay ) { // left left rotate
-    return Splay<T>::zag( (Splay<T> *) zag(nodeToSplay)->getParent() ); // rotate node right
+    return Splay<T>::zag( zag( (Splay<T>*)nodeToSplay->getParent()->getParent() ) ); // rotate node right
 }
 
 
@@ -101,34 +101,34 @@ Splay<T>* Splay<T>::splay( Tree<T>* nodeToSplay ) {
 
     if ( nodeToSplay->getParent() != NULL ) {
         
-        Splay<T>* nodeToSplayRoot = (Splay<T>*) nodeToSplay->getParent();
-
         // check if nodeToSplay has a grandparent
         if ( nodeToSplay->getParent()->getParent() != NULL ) {
 
-            cout << (( Splay<T>*) nodeToSplay->getParent() )->getType() <<"\n";
-            cout << ((Splay<T>*) nodeToSplay)->getType() <<"\n";
+            childType parentT = (( Splay<T>*) nodeToSplay->getParent() )->getType();
+            childType curType = ((Splay<T>*) nodeToSplay)->getType();
 
+            cout << "parentType: " << parentT << "   curType: " << curType <<endl;
+            
             // case 1: Zig-Zig LEFT-LEFT
             if ( (( Splay<T>*) nodeToSplay->getParent() )->getType() != RIGHT && ((Splay<T>*) nodeToSplay)->getType() == LEFT ){
                 cout << "zigzig "<< nodeToSplay->getValue()<<endl<<endl; 
-                return splay( zigzig( nodeToSplayRoot ) );
+                return splay( zigzig( (Splay<T>*) nodeToSplay ) );
             }
-            // case 2: Zig-Zig RIGHT-RIGHT
+            // case 2: Zag-Zag RIGHT-RIGHT
             else if ( (( Splay<T>*) nodeToSplay->getParent() )->getType() != LEFT && ((Splay<T>*) nodeToSplay)->getType() == RIGHT ){
                 cout << "zagzag "<< nodeToSplay->getValue()<<endl<<endl; 
-                return splay( zagzag( nodeToSplayRoot ) );
+                return splay( zagzag( (Splay<T>*) nodeToSplay ) );
             }
             // case 3: Zig-Zag LEFT-RIGHT
             else if ( (( Splay<T>*) nodeToSplay->getParent() )->getType() != RIGHT && ((Splay<T>*) nodeToSplay)->getType() == RIGHT ){
                 cout << "zigzag "<< nodeToSplay->getValue()<<endl<<endl; 
-                return splay( zigzag( nodeToSplayRoot ) );
+                return splay( zigzag( (Splay<T>*) nodeToSplay ) );
             }
-            // case 4: Zig-Zig RIGHT-LEFT
+            // case 4: Zag-Zig RIGHT-LEFT
             else {
                 assert( (( Splay<T>*) nodeToSplay->getParent() )->getType() != LEFT && ((Splay<T>*) nodeToSplay)->getType() == LEFT );
                 cout << "zagzig "<< nodeToSplay->getValue()<<endl<<endl; 
-                return splay( zagzig( nodeToSplayRoot ) );
+                return splay( zagzig( (Splay<T>*) nodeToSplay ) );
             }
 
         }
@@ -152,11 +152,14 @@ Splay<T>* Splay<T>::splay( Tree<T>* nodeToSplay ) {
 template <class T>
 Splay<T> * Splay<T>::insert( const T& x )
 {
-	if(x < this->value){// go left
-		if(this->left == NULL){
+    if ( x == this->value ) {
+		return splay(this);
+    }
+	else if ( x < this->value ) {// go left
+		if ( this->left == NULL ) {
             cout<<"inserting: "<<x<<endl;
 			this->setLeft(new Splay(x, NULL, NULL, this, LEFT));			
-			return splay(this->left);// go up the tree fixing nodes
+			return splay(this->left);
 		}
 		else return (Splay*) this->left->insert(x);
 	}
@@ -172,67 +175,83 @@ Splay<T> * Splay<T>::insert( const T& x )
 
 
 template <class T>
-Splay<T> * Splay<T>::search( const T& v ) {
+Splay<T> * Splay<T>::search( const T& x ) {
 
     // if root equals value return 
-    if(v == this->value) return this;
-
-    else if (v < this->value) { // if v less than value, return search on left tree
-        if(this->left == NULL) return NULL;
-        else return (Splay<T>*) this->left->search(v);
-    } else { // if v greater than value, return search on right tree
-        if(this->right == NULL) return NULL;
-        else return (Splay<T>*) this->right->search(v);
+    if(x == this->value) return splay(this);
+    else if (x< this->value) { // if x less than value, value is in left subtree
+        if(this->left == NULL) return splay(this);
+        else return (Splay<T>*) this->left->search(x);
+    }
+    else { // if x greater than value,  value is in right subtree
+        if(this->right == NULL) return splay(this);
+        else return (Splay<T>*) this->right->search(x);
     }
 }
 
 
 template <class T>
-Splay<T> * Splay<T>::remove( const T& v ) {
-    if(v == this->value){
+Splay<T> * splayMax( Splay<T> * root ) {
+    Splay<T> * rightSub =  (Splay<T> *) root->getRight();
+    if ( rightSub != NULL ) return splayMax(rightSub);
+    else return root->splay( root );
+}
 
-        // Case (0): 1 node in whole tree
-        if(this->parent == NULL && this->left == NULL && this->right == NULL){
-            // delete this;
+
+template <class T>
+Splay<T> * Splay<T>::remove( const T& x ) {
+	// splay node with x to root (search for x)
+    Splay<T> * searchRoot = this->search(x);
+
+    Splay<T> * leftSub = (Splay<T>*) searchRoot->getLeft();
+    Splay<T> * rightSub = (Splay<T>*) searchRoot->getRight();
+    
+    cout<< "Removing: " << x <<endl;
+    searchRoot->show();
+
+    if ( searchRoot->getValue() == x ) {
+        // no children
+        if ( leftSub == NULL && rightSub == NULL ) {
+            cout << "NO CHILD\n";
             return NULL;
         }
-        // Case (1): no children
-        else if(this->right == NULL && this->left == NULL){
+        // 2 children
+        else if ( leftSub != NULL && rightSub != NULL ) {
+            cout << "2 CHILD\n";
+            cout<< "left: " << leftSub->getValue() <<endl;
+            cout<< "right: " << rightSub->getValue() <<endl;
+            leftSub->setType(ROOT);
+            leftSub->setParent(NULL);
 
-            // make this parent point to null
-            if(this->parent->getValue() > v) this->parent->setLeft(NULL);
-            else this->parent->setRight(NULL);
-
-            //delete this;
-            return this;
+            Splay<T> * newRoot = splayMax( leftSub );
+            cout<< "newRoot type: "<< newRoot->getType()<<endl;
+            cout<< "newRoot value: "<< newRoot->getValue()<<endl;
+            newRoot->setRight(rightSub);
+            rightSub->setParent(newRoot);
+            
+            return newRoot;
         }
-        // Case(2): 1 child
-        else if((this->right == NULL && this->left != NULL) || (this->right != NULL && this->left == NULL)){
-            // find if child is left or right
-            Splay<T> * child = (Splay<T>*) this->right != NULL ? (Splay<T>*) this->right : (Splay<T>*) this->left;
-            child->setParent(this->parent);
+        // 1 child
+        else {
+            cout << "1 CHILD\n";
+            assert( leftSub != NULL || rightSub != NULL );
+            Splay<T> * newRoot = (leftSub != NULL ? leftSub : rightSub);
+            newRoot->setParent(NULL);
+            newRoot->setType(ROOT);
+            
+            cout<<"1 root\n";
+            newRoot->show();
 
-            // make parent point to child (if parent isn't null)
-            if(this->parent != NULL){
-                if(this->parent->getValue() > v)this->parent->setLeft(child);
-                else this->parent->setRight(child);
-            }
-
-            // delete this;
-            return this;
-        }
-        // Case (3): 2 children
-        else{
-            // swap value of this node with successor, and remove successor node from tree
-            Splay<T> * succ = (Splay<T>*) Tree<T>::successor();
-            int valueToReplace = succ->value;
-            this->right->remove(valueToReplace);
-            this->setValue(valueToReplace);
-            return this;
+            return newRoot;
         }
     }
-    else if(v < this->value) return (Splay<T>*) this->left->remove(v);
-    else return (Splay<T>*) this->right->remove(v);
+    else return searchRoot;
+
+
+
+    // splay max in left subtree to root
+
+    // attach the right subtree to the new root of the left subtree
 }
 
 template <class T>

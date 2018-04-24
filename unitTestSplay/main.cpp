@@ -5,54 +5,44 @@ using std::cerr;
 using std::endl;
 
 int main() {
-    Splay<int> *s = new Splay<int>(10);
+    Splay<int> *s = new Splay<int>(14);
     s->show();
     cerr << "\n\n";
 
-    s = s->insert(15);
+    s = s->insert(2);
     s->show();
-
     cerr << "\n\n";
 
-    s = s->insert(20);
+    s = s->insert(1);
     s->show();
-
     cerr << "\n\n";
 
-    s = s->insert(3);
-    s->show();
-   
-    cerr << "\n\n";
+/* while(1){
+        cout<<endl;
+        cout<<endl;
+                cout<<"Enter a number :";
+        int x;
+        cin>>x;
 
-    s = s->insert(5);
-    s->show();
+        s = s->insert(x);
+        s->show();
+        if(x == 1) break;
+    }
+    */
+ 
+ while(1){
+        cout<<endl;
+        cout<<endl;
+                cout<<"search a number :";
+        int x;
+        cin>>x;
 
-    cerr << "\n\n";
+        s = s->search(x);
+        s->show();
+        if(x == -1) break;
+    }
 
-    s = s->insert(8);
-    s->show();
-
-    cerr << "\n\n";
-
-    s = s->insert(100);
-    s->show();
-
-   cerr << "\n\n";
-
-    s = s->insert(74);
-    s->show();
-
-   cerr << "\n\n";
-
-    s = s->insert(-1);
-    s->show();
-
-
-   cerr << "\n\n";
-
-    s = s->insert(123);
-    s->show();
-
+    cout<< s->getType()<<endl;
 
     return 0;
 }
