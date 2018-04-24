@@ -5,16 +5,14 @@ using std::endl;
 
 // VALID
 template <class T>
-Splay<T>* Splay<T>::zig( Splay<T>* pivot ) { 
-    /*
-    * RIGHT ROTATION - BRINGS t TO ROOT OF SUBTREE
-    */
+Splay<T>* Splay<T>::zig( Splay<T>* root ) { 
+    // RIGHT ROTATION - BRINGS pivot TO ROOT OF SUBTREE
 
-   Splay<T> * root = (Splay<T>*) pivot->getParent();
+	Splay<T> * pivot = (Splay<T>*) root->getLeft();
 	
 	// set pivot's parent
 	pivot->setParent( root->getParent() );
-	if(root->getParent() != NULL){
+	if ( root->getParent() != NULL ) {
 		// find which side pivot is on of parent
 		if( pivot->getValue() < root->getParent()->getValue() )
 			root->getParent()->setLeft(pivot);
@@ -23,66 +21,29 @@ Splay<T>* Splay<T>::zig( Splay<T>* pivot ) {
 	
 	// set up root's left child
 	root->setLeft(pivot->getRight());
-	if(pivot->getRight() != NULL) 
+	if (pivot->getRight() != NULL){
 		pivot->getRight()->setParent(root);
-
+        (( Splay<T>*)( pivot->getRight() ))->setType(LEFT);
+    }
 	// set pivot's right child
 	pivot->setRight(root);
 	root->setParent(pivot);
 
-    pivot->setType(root->getType());
-    root->setType(RIGHT);
-    if ( ((Splay<T>*)(root->getLeft())) != NULL) ((Splay<T>*)(root->getLeft()))->setType(LEFT);
+    pivot->setType( root->getType() );
+    root->setType( RIGHT );
 
-	//((Tree<T>*)pivot)->updateHeight();
+	((Tree<T>*)pivot)->updateHeight();
 	return pivot;
-
-    /*
-    if (t->getParent() == NULL) return t;
-
-    Splay<T>* parent = (Splay<T>*) t->getParent();  // parent of the node to be splayed 
-
-    // right subtree created
-    Splay<T>* newRight = new Splay<T>(parent->getValue(), RIGHT);
-    Splay<T>* newLeft = (Splay<T>*) t->getLeft();
-
-    // right rotation occurs here
-    newRight->setRight(parent->getRight());
-    newRight->setLeft(t->getRight());
-    newRight->setParent(parent);
-
-    if (newLeft != NULL) {
-        newLeft->setParent(parent);
-        newLeft->setType(LEFT);
-    }
-    
-    // clean up pointers
-    parent->setLeft(newLeft);
-    parent->setRight(newRight);
-    parent->setValue(t->getValue());
-
-    newLeft = NULL;
-    newRight = NULL;
-
-    //if (parent->getParent() == NULL) parent->setType(ROOT); 
-    // delete old node (replaced with new node)
-    t->setParent(NULL);
-    t->setRight(NULL);
-    t->setLeft(NULL);
-
-    delete t;
-    t = NULL;
-    
-    return parent;*/
 }
 
 template <class T>
-Splay<T>* Splay<T>::zag( Splay<T>* pivot ) { // left rotation
-    /*
-    * LEFT ROTATION - BRINGS t TO ROOT OF SUBTREE
-    */
+Splay<T>* Splay<T>::zag( Splay<T>* root ) { // left rotation
+    // LEFT ROTATION - BRINGS pivot TO ROOT OF SUBTREE
+    cout<<"FSAFSDFSDFSDA\n";
 
-   	Splay<T> * root = (Splay<T>*) pivot->getParent();
+	Splay<T> * pivot = (Splay<T>*) root->getRight();
+
+    cout<< pivot->getValue()<<endl;
 
 	// set pivot's parent to be root's parent
 	pivot->setParent( root->getParent() );
@@ -90,187 +51,123 @@ Splay<T>* Splay<T>::zag( Splay<T>* pivot ) { // left rotation
 		// find which side pivot is on of parent
 		if( pivot->getValue() < pivot->getParent()->getValue() )
 			pivot->getParent()->setLeft(pivot);
-		else 
+		else
 			pivot->getParent()->setRight(pivot);	
 	}
 
 	// set up this's right child
 	root->setRight(pivot->getLeft());
-	if(pivot->getLeft() != NULL) pivot->getLeft()->setParent(root);
-    
+	if(pivot->getLeft() != NULL){
+        pivot->getLeft()->setParent(root);
+        (( Splay<T>*)( pivot->getLeft() ))->setType(RIGHT);
+    }
 	// set pivot's left child
 	pivot->setLeft(root);
 	root->setParent(pivot);
 
-    pivot->setType(root->getType());
-    root->setType(LEFT);
-    if ( ((Splay<T>*)(root->getRight())) != NULL ) ((Splay<T>*)(root->getRight()))->setType(RIGHT);
+    pivot->setType( root->getType() );
+    root->setType( LEFT );
 
-	//((Tree<T>*)pivot)->updateHeight();
+	((Tree<T>*)pivot)->updateHeight();
 	return pivot;
+}
 
-    /*
-    if (t->getParent() == NULL) return t;
+template <class T>
+Splay<T>* Splay<T>::zigzig( Splay<T>* nodeToSplay ) { // right right rotate
+    return Splay<T>::zig( (Splay<T> *) zig(nodeToSplay)->getParent() ); // rotate node right
+}
 
-    Splay<T>* parent = (Splay<T>*) t->getParent(); // parent of the node to be splayed
+template <class T>
+Splay<T>* Splay<T>::zigzag( Splay<T>* nodeToSplay ) { // right left rotate
+    return Splay<T>::zig( (Splay<T> *) zag(nodeToSplay)->getParent() ); // rotate node right
+}
 
-    // new left subtree created
-    Splay<T>* newLeft = new Splay<T>(parent->getValue(), LEFT);
-    Splay<T>* newRight = (Splay<T>*)t->getRight();
+template <class T>
+Splay<T>* Splay<T>::zagzig( Splay<T>* nodeToSplay ) { // left right rotate
+    return Splay<T>::zag( (Splay<T> *) zig(nodeToSplay)->getParent() ); // rotate node right
+}
 
-    // left rotation occurs here
-    newLeft->setLeft(parent->getLeft());
-    newLeft->setRight(t->getLeft());
-    newLeft->setParent(parent);
+template <class T>
+Splay<T>* Splay<T>::zagzag( Splay<T>* nodeToSplay ) { // left left rotate
+    return Splay<T>::zag( (Splay<T> *) zag(nodeToSplay)->getParent() ); // rotate node right
+}
 
-    if (newRight != NULL) {
-        newRight->setParent(parent);
-        newRight->setType(RIGHT);
+
+template <class T>
+Splay<T>* Splay<T>::splay( Tree<T>* nodeToSplay ) {
+    // check if nodeToSplay has a parent
+
+    nodeToSplay->show();
+
+    if ( nodeToSplay->getParent() != NULL ) {
+        
+        Splay<T>* nodeToSplayRoot = (Splay<T>*) nodeToSplay->getParent();
+
+        // check if nodeToSplay has a grandparent
+        if ( nodeToSplay->getParent()->getParent() != NULL ) {
+
+            cout << (( Splay<T>*) nodeToSplay->getParent() )->getType() <<"\n";
+            cout << ((Splay<T>*) nodeToSplay)->getType() <<"\n";
+
+            // case 1: Zig-Zig LEFT-LEFT
+            if ( (( Splay<T>*) nodeToSplay->getParent() )->getType() != RIGHT && ((Splay<T>*) nodeToSplay)->getType() == LEFT ){
+                cout << "zigzig "<< nodeToSplay->getValue()<<endl<<endl; 
+                return splay( zigzig( nodeToSplayRoot ) );
+            }
+            // case 2: Zig-Zig RIGHT-RIGHT
+            else if ( (( Splay<T>*) nodeToSplay->getParent() )->getType() != LEFT && ((Splay<T>*) nodeToSplay)->getType() == RIGHT ){
+                cout << "zagzag "<< nodeToSplay->getValue()<<endl<<endl; 
+                return splay( zagzag( nodeToSplayRoot ) );
+            }
+            // case 3: Zig-Zag LEFT-RIGHT
+            else if ( (( Splay<T>*) nodeToSplay->getParent() )->getType() != RIGHT && ((Splay<T>*) nodeToSplay)->getType() == RIGHT ){
+                cout << "zigzag "<< nodeToSplay->getValue()<<endl<<endl; 
+                return splay( zigzag( nodeToSplayRoot ) );
+            }
+            // case 4: Zig-Zig RIGHT-LEFT
+            else {
+                assert( (( Splay<T>*) nodeToSplay->getParent() )->getType() != LEFT && ((Splay<T>*) nodeToSplay)->getType() == LEFT );
+                cout << "zagzig "<< nodeToSplay->getValue()<<endl<<endl; 
+                return splay( zagzig( nodeToSplayRoot ) );
+            }
+
+        }
+        else {
+            // nodeToSplay's parent is root
+            if( ((Splay<T>*) nodeToSplay)->getType() == LEFT ){
+                cout << "zig "<< nodeToSplay->getValue()<<endl; 
+                return zig( (Splay<T>*) nodeToSplay->getParent() );
+            }
+            else{
+                cout << "zag "<< nodeToSplay->getValue()<<endl; 
+                assert( ((Splay<T>*) nodeToSplay)->getType() == RIGHT );
+                return zag( (Splay<T>*) nodeToSplay->getParent() );
+            }
+        }
+
     }
-
-    // clean up pointers
-    parent->setLeft(newLeft);
-    parent->setRight(newRight);
-    parent->setValue(t->getValue());
-
-    newLeft = NULL;
-    newRight = NULL;
-
-    //if (parent->getParent() == NULL) parent->setType(ROOT); 
-    // delete old node (replaced with new node)
-    t->setParent(NULL);
-    t->setLeft(NULL);
-    t->setRight(NULL);
-    delete t;
-    t = NULL;
-
-    return parent; // splayed node*/
-
+    else return (Splay<T>*) nodeToSplay;// we are at root
 }
 
 template <class T>
-Splay<T>* Splay<T>::zigzig( Splay<T>* t ) { // right right rotate
-    return Splay<T>::zig(Splay<T>::zig(t)); // rotate node right
-}
-
-template <class T>
-Splay<T>* Splay<T>::zigzag( Splay<T>* t ) { // right left rotate
-    return Splay<T>::zag(Splay<T>::zig(t)); // rotate node right
-    //t = Splay<T>::zig(t);
-    //t = Splay<T>::zag(t); // rotate node right
-    //return t;
-}
-
-template <class T>
-Splay<T>* Splay<T>::zagzig( Splay<T>* t ) { // left right rotate
-    return Splay<T>::zig(Splay<T>::zag(t)); // rotate node right
-    //t = Splay<T>::zag(t);
-    //t = Splay<T>::zig(t); // rotate node right
-    //return t;
-}
-
-template <class T>
-Splay<T>* Splay<T>::zagzag( Splay<T>* t ) { // left left rotate
-    return Splay<T>::zag(Splay<T>::zag(t)); // rotate node right
-}
-
-
-template <class T>
-Splay<T>* Splay<T>::splay( Tree<T>* t ) {
-    Splay<T>* ts = (Splay<T>*) t;
-    if (ts == this) { 
-        cerr << "same" << endl;
-        // Case: input is equal to this
-        return (Splay<T>*)this;
-    } else if (ts->getType() == RIGHT && ((Splay<T>*)(ts->getParent()))->getType() == ROOT) { 
-        // Case: input is right and parent is root
-        ts->show();
-        cerr << "zag" << endl;
-        ts = zag(ts);
-        ts->show();
-        return (Splay<T>*)ts;
-    } else if (ts->getType() == LEFT && ((Splay<T>*)(ts->getParent()))->getType() == ROOT) {
-        // Case: input is left and parent is root
-        cerr << "zig" << endl;
-        ts = zig(ts);
-        return (Splay<T>*)ts;
-    } else if (ts->getType() == RIGHT && ((Splay<T>*)(ts->getParent()))->getType() != RIGHT) {
-        // Case: input is right and parent is left or root
-        cerr << "zag zig" << endl;
-        ts = zagzig(ts);
-        return splay(ts);
-    } else if (ts->getType() == LEFT && ((Splay<T>*)(ts->getParent()))->getType() != LEFT) {
-        // Case: input is left and parent is right or root
-        cerr << "zig zag" << endl;
-        ts = zigzag(ts);
-        return splay(ts);
-    } else if (ts->getType() == LEFT && ((Splay<T>*)(ts->getParent()))->getType() != RIGHT) {
-        // Case: input is left and parent is left or root
-        cerr << "zig zig" << endl;
-        ts = zigzig(ts);
-        return splay(ts);
-    } else if (ts->getType() == RIGHT && ((Splay<T>*)(ts->getParent()))->getType() != LEFT) {
-        // Case: input is right and parent is right or root
-        cerr << "zag zag" << endl;
-        //cerr << "this:" << endl;
-        //this->show();
-        //cerr << "ts:" << endl;
-        //ts->show();
-        //cerr <<  ((ts->getParent()))->getValue() << endl;
-        //cerr <<  ((ts->getParent())->getParent())->getValue() << endl;
-        //cerr <<  (((ts->getParent())->getParent())->getLeft())->getValue() << endl;
-        ts = zag(ts);
-        //this->show();
-        //ts->show();
-        return splay(ts);
-    }
-}
-
-template <class T>
-Splay<T> * Splay<T>::insert( const T& v )
+Splay<T> * Splay<T>::insert( const T& x )
 {
-    if ( this->getParent() == NULL ) {
-        if( v < this->value ){// go left
-            if(this->left == NULL){
-                this->setLeft(new Splay(v, NULL, NULL, this, LEFT));
-                this->show();
-                this->splay(this->getLeft());
-            } else {
-                this->left->insert(v);
-                this->show();
-                this->splay(this->search(v));
-            } 
-            return getRoot();
-        }
-        else if ( v > this->value ){ // go right
-            if(this->right == NULL){
-                this->setRight(new Splay(v, NULL, NULL, this, RIGHT));  
-                this->show();
-                this->splay(this->getRight());    
-            } else {
-                this->right->insert(v);
-                this->show();
-                this->splay(this->search(v));
-            } 
-            return getRoot();
-        } 
-    } else {
-        if( v < this->value ){// go left
-            if(this->left == NULL){
-                this->setLeft(new Splay(v, NULL, NULL, this, LEFT));
-                return getRoot();
-            }
-            else return (Splay*) this->left->insert(v);
-        }
-        else if ( v > this->value ){ // go right
-            if(this->right == NULL){
-                this->setRight(new Splay(v, NULL, NULL, this, RIGHT));    
-                return getRoot();
-            }
-            else return (Splay*) this->right->insert(v);
-        }
-    }
-    
+	if(x < this->value){// go left
+		if(this->left == NULL){
+            cout<<"inserting: "<<x<<endl;
+			this->setLeft(new Splay(x, NULL, NULL, this, LEFT));			
+			return splay(this->left);// go up the tree fixing nodes
+		}
+		else return (Splay*) this->left->insert(x);
+	}
+	else{
+		if(this->right == NULL){
+            cout<<"inserting: "<<x<<endl;
+			this->setRight(new Splay(x, NULL, NULL, this, RIGHT));
+			return splay(this->right);
+		}
+		else return (Splay*) this->right->insert(x);
+	}
 }
 
 
