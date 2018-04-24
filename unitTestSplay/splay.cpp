@@ -39,11 +39,8 @@ Splay<T>* Splay<T>::zig( Splay<T>* root ) {
 template <class T>
 Splay<T>* Splay<T>::zag( Splay<T>* root ) { // left rotation
     // LEFT ROTATION - BRINGS pivot TO ROOT OF SUBTREE
-    cout<<"FSAFSDFSDFSDA\n";
 
 	Splay<T> * pivot = (Splay<T>*) root->getRight();
-
-    cout<< pivot->getValue()<<endl;
 
 	// set pivot's parent to be root's parent
 	pivot->setParent( root->getParent() );
