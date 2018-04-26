@@ -8,6 +8,14 @@ const int RIGHT_HEAVY = -2;
 
 // ****************************************************************************
 
+template<class T>
+inline AVL<T> * getRootTree(AVL<T> * tree){
+	if(tree->getParent() == NULL) return tree;
+	else return getRootTree( (AVL<T>*) tree->getParent() );
+}
+
+// ****************************************************************************
+
 // (re)compute height 
 template <class T>
 void AVL<T>::updateHeight()
@@ -93,7 +101,6 @@ AVL<T> * leftRotate(AVL<T> * root){
 
 // ****************************************************************************
 
-
 // balance this node => return new root
 template<class T>
 AVL<T> * AVL<T>::balance(){
@@ -107,7 +114,7 @@ AVL<T> * AVL<T>::balance(){
 		if( balance >= LEFT_HEAVY ){// left-right OR left-left case
 
 			// left left case
-			if( isLeftHeavy((AVL<T>*)this->left) ){
+			if( isLeftHeavy( (AVL<T>*)this->left ) ){
 				pivot = rightRotate(this);
 			}
 			// left right case
@@ -120,10 +127,12 @@ AVL<T> * AVL<T>::balance(){
 			if(pivot->parent == NULL) return pivot;
 			else return ((AVL<T>*)pivot->parent)->balance();
 		}
-		else if( balance <= RIGHT_HEAVY ){// right-left OR right-right case
+		else{// right-left OR right-right case
+
+			assert(balance <= RIGHT_HEAVY);
 
 			// right-left case
-			if( isLeftHeavy((AVL<T>*)this->right) ){
+			if( isLeftHeavy( (AVL<T>*)this->right ) ){
 				pivot = rightRotate((AVL<T>*)this->right);
 				pivot = leftRotate(this);
 			}
@@ -147,6 +156,9 @@ AVL<T> * AVL<T>::balance(){
 
 template<class T>
 AVL<T> * AVL<T>::insert(const T& x){
+	
+	if(x == this->value) return getRootTree(this);
+
 	if(x < this->value){// go left
 		if(this->left == NULL){
 			this->setLeft(new AVL(x, NULL, NULL, this));			
